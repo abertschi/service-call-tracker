@@ -1,7 +1,10 @@
+[![Build Status](https://travis-ci.org/abertschi/service-call-tracker.svg?branch=master)](https://travis-ci.org/abertschi/service-call-tracker)
+
 # service-call-tracker
-
+  
 > Service-call-tracker is a proxy framework that creates snapshots of method calls.  
-
+  
+  
 Method calls can be recorded and replayed to stub their implementation in a system-under-test,
 making your integration tests independent of 3rd-party calls.
 
