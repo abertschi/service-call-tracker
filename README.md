@@ -1,8 +1,9 @@
 # service-call-tracker
 
-Service-call-tracker is a proxy framework that creates snapshots of method calls.  
+> Service-call-tracker is a proxy framework that creates snapshots of method calls.  
 
-Method calls can be recorded and replayed to stub their implementation in a system-under-test, making your integration tests independent of 3rd-party calls.
+Method calls can be recorded and replayed to stub their implementation in a system-under-test,
+making your integration tests independent of 3rd-party calls.
 
 ![](misc/bigpicture.png)
 
@@ -37,6 +38,8 @@ The BOM consists of the API and the IMPL of service-call-tracker in compatible v
 ```
 
 ## Recording
+In order to stub method implementations, an actual method call must be performed.
+Therefore, the flag `setCallRecording(boolean)` is set to `true` and a recording file is specified.
 
 ```java
 SctConfigurationImpl config = new SctConfigurationImpl();
@@ -75,8 +78,8 @@ The recordings will look like below:
 ```
 
 Each call consists of a `request` and a `response` object.
-In the example above, a method with the signature `String` and return type `org.sct.domain.Customer` would return `Peter Parker` born in `1980` if called
-with the argument `Peter`.
+In the example above, a method with the signature `String` and return type `org.sct.domain.Customer`
+would return _Peter Parker_ born in _1980_ if it is called with the argument _Peter_.
 
 To exclude parameters from being compared, the keyword `%ANY%` can be used.
 
@@ -88,13 +91,14 @@ To exclude parameters from being compared, the keyword `%ANY%` can be used.
 
 ## Replaying
 
-Having calls recorded like in the file shown below, a method call ...
+Having calls recorded, a method call ...
 
 ```java
 myservice.getCustomer("Peter");
 
 ```
 ... will return a customer called `Spiderman`.
+
 
 ```xml
 <linked-list>
@@ -109,10 +113,6 @@ myservice.getCustomer("Peter");
       </object>
     </response>
   </org.sct.call.Call>
-
-  <org.sct.call.Call>
-    ...
-  </org.sct.call.Call>
 </linked-list>
 ```
 
@@ -120,7 +120,7 @@ myservice.getCustomer("Peter");
 SctConfigurationImpl config = new SctConfigurationImpl();
 SctConfigurator.getInstance().setConfiguration(config);
 
-// enable recording
+// enable replaying
 config.setResponseLoading(true);
 config.setResponseLoading(new File("my-recording.xml"));
 
