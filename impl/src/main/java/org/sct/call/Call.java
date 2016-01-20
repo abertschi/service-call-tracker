@@ -1,5 +1,7 @@
 package org.sct.call;
 
+import com.thoughtworks.xstream.annotations.XStreamAlias;
+
 /**
  * POJO representing a service call with request and response.
  * 
@@ -7,6 +9,7 @@ package org.sct.call;
  * @since 30.06.2014
  * 
  */
+@XStreamAlias("call")
 public class Call {
 
     private CallObject request;

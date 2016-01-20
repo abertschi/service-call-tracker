@@ -1,12 +1,10 @@
-package org.sct;
-
-import org.sct.domain.Customer;
+package org.sct.domain;
 
 public interface CustomerService
 {
     Customer getCustomer(String key);
 
-    class CustomerServiceImpl implements CustomerService {
+    class DummyImpl implements CustomerService {
 
         @Override
         public Customer getCustomer(String key)

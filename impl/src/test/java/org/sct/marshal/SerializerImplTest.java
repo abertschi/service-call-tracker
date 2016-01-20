@@ -13,7 +13,6 @@
 //import TestHelp;
 //import org.sct.serialize.SerializerImpl;
 //import com.thoughtworks.xstream.XStream;
-//import com.winterthur.ch.service.corba.abgabezuschlagberechnungget_1_0.AbgabeZuschlagBerechnungGet_1_0CORBAClient.CInOp1;
 //
 ///**
 // * Unittests for {@link SerializerImpl}.

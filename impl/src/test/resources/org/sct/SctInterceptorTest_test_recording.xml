@@ -1,0 +1,13 @@
+<linked-list>
+    <org.sct.call.Call>
+        <request>
+            <object class="string">Peter</object>
+        </request>
+        <response>
+            <object class="org.sct.domain.Customer">
+                <name>Spiderman</name>
+                <yearOfBirth>1980</yearOfBirth>
+            </object>
+        </response>
+    </org.sct.call.Call>
+</linked-list>

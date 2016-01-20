@@ -1,5 +1,7 @@
 package org.sct.xstream;
 
+import org.sct.call.Call;
+import org.sct.call.CallObject;
 import org.sct.xstream.converter.CallObjectConverter;
 import org.sct.xstream.converter.ExclusionReflectionConverter;
 import org.sct.xstream.driver.HierarchicalStreamDelegator;
@@ -53,8 +55,14 @@ public enum XStreamProvider {
         
         xstream.registerConverter(callObjConverter);
         xstream.registerConverter(reflectionConverter, XStream.PRIORITY_LOW);
+        registerAliases(xstream);
         applyDefaultConfig(xstream);
         return xstream;
+    }
+
+    private void registerAliases(XStream xstream) {
+        xstream.alias("call", Call.class);
+        xstream.alias("callobject", CallObject.class);
     }
 
     private void applyDefaultConfig(XStream xstream) {

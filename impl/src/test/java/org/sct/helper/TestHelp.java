@@ -1,9 +1,11 @@
 package org.sct.helper;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Scanner;
 
 import org.sct.xstream.XStreamProvider;
 import com.thoughtworks.xstream.XStream;
@@ -28,6 +30,17 @@ public class TestHelp {
         try {
             return childF.toURI().toURL();
         } catch (MalformedURLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static String readFile(URL url) {
+        try
+        {
+            return new Scanner(new File(url.getFile())).useDelimiter("\\Z").next();
+        }
+        catch (FileNotFoundException e)
+        {
             throw new RuntimeException(e);
         }
     }

@@ -13,26 +13,26 @@ public class CallComparatorTest {
      * Customer with name 'andrin', year is 1994
      */
     final static String XML_NO_EXCLUSION =
-            "<CallObject>"
-                    + "<object class=\"Customer\"><name>andrin</name><yearOfBirth>1994</yearOfBirth></object>"
-                    + "</CallObject>";
+            "<callobject>"
+                    + "<object class=\"org.sct.domain.Customer\"><name>andrin</name><yearOfBirth>1994</yearOfBirth></object>"
+                    + "</callobject>";
 
 
     /*
      * Customer with any name, Year is 1994
      */
     final static String XML_NAME_EXCLUSION =
-            "<CallObject>"
-                    + "<object class=\"Customer\"><name>%ANY%</name><yearOfBirth>1994</yearOfBirth></object>"
-                    + "</CallObject>";
+            "<callobject>"
+                    + "<object class=\"org.sct.domain.Customer\"><name>%ANY%</name><yearOfBirth>1994</yearOfBirth></object>"
+                    + "</callobject>";
 
     /*
      * Customer with name 'andrin', any year
      */
     final static String XML_YEAR_EXCLUSION =
-            "<CallObject>"
-                    + "<object class=\"Customer\"><name>andrin</name><yearOfBirth>%ANY%</yearOfBirth></object>"
-                    + "</CallObject>";
+            "<callobject>"
+                    + "<object class=\"org.sct.domain.Customer\"><name>andrin</name><yearOfBirth>%ANY%</yearOfBirth></object>"
+                    + "</callobject>";
 
     private CallComparator comparator;
 
@@ -89,8 +89,7 @@ public class CallComparatorTest {
     }
 
     private boolean compareObject(String xml, Object request) {
-        CallObject fromXml = (CallObject) xstream.fromXML(xml);
-        return comparator.compareRequestWithCallObject(request, fromXml);
+        return comparator.compareRequestWithCallObject(request, (CallObject) xstream.fromXML(xml));
     }
 
     private void assertTrue(String xml, Object request) {

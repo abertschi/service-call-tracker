@@ -10,7 +10,7 @@ public class Customer {
         this.name = name;
         this.yearOfBirth = yearOfBirth;
     }
-    
+
     public int getYearOfBirth() {
         return yearOfBirth;
     }

@@ -2,6 +2,7 @@ package org.sct.call;
 
 import java.util.List;
 
+import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.thoughtworks.xstream.annotations.XStreamOmitField;
 import com.thoughtworks.xstream.io.path.Path;
 
@@ -10,6 +11,7 @@ import com.thoughtworks.xstream.io.path.Path;
  * @since 09.07.2014
  * 
  */
+@XStreamAlias("callobject")
 public class CallObject {
 
     private Object object;
