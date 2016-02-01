@@ -61,8 +61,8 @@ myservice.getCustomer("Peter");
 The recordings will look like below:
 
 ```xml
-<linked-list>
-  <org.sct.call.Call>
+<calls>
+  <call>
     <request>
       <object class="string">Peter</object>
     </request>
@@ -72,12 +72,11 @@ The recordings will look like below:
         <yearOfBirth>1980</yearOfBirth>
       </object>
     </response>
-  </org.sct.call.Call>
-
-  <org.sct.call.Call>
-    ...
-  </org.sct.call.Call>
-</linked-list>
+  </call>
+  <call>
+   ....
+  </call>
+</calls>
 ```
 
 Each call consists of a `request` and a `response` object.
@@ -104,19 +103,19 @@ myservice.getCustomer("Peter");
 
 
 ```xml
-<linked-list>
-  <org.sct.call.Call>
+<calls>
+  <call>
     <request>
       <object class="string">Peter</object>
     </request>
     <response>
       <object class="org.sct.domain.Customer">
-        <name>Spiderman</name>
+        <name>Peter Parker</name>
         <yearOfBirth>1980</yearOfBirth>
       </object>
     </response>
-  </org.sct.call.Call>
-</linked-list>
+  </call>
+</calls>
 ```
 
 ```java
