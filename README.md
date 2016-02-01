@@ -110,7 +110,7 @@ myservice.getCustomer("Peter");
     </request>
     <response>
       <object class="org.sct.domain.Customer">
-        <name>Peter Parker</name>
+        <name>Spiderman</name>
         <yearOfBirth>1980</yearOfBirth>
       </object>
     </response>
