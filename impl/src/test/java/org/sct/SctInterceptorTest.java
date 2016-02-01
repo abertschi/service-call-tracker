@@ -40,6 +40,7 @@ public class SctInterceptorTest
 
         // then
         String is = TestHelp.readFile(config.getCallRecordingUrl());
+        System.out.println(is);
         Assert.assertTrue(is.contains("Peter Parker"));
     }
 

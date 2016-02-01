@@ -48,11 +48,12 @@ public class CallPersistenceImpl implements CallPersistence {
         URL where = getConfig().getCallRecordingUrl();
         CallCollection collection = new CallCollection(xstream, get(where));
         collection.put(in, out);
-        this.service.marshal(collection.getCollection(), where);
+        this.service.marshal(collection, where);
     }
 
     protected List<Call> get(URL url) {
-        return this.service.unmarshal(url);
+        CallCollection c = this.service.unmarshal(url);
+        return c != null ? c.getCollection(): null;
     }
 
     private SctConfiguration getConfig() {
