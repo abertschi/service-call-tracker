@@ -138,4 +138,4 @@ In order to intercept calls in a system-under-test, service-call-tracker must be
 Here are some ways how to do that:
 - Java Dynamic Proxy API
 - Any bean container framework providing interceptors (EJB, CDI)
-- JBoss Arquillian with [arquillian-service-call-tracker Extension]()
+- JBoss Arquillian with [arquillian-service-call-tracker Extension](https://github.com/abertschi/arquillian-service-call-tracker-extension)
