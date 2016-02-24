@@ -21,12 +21,18 @@
 	</properties>
 
 
-	<distributionManagement>
-		<repository>
-			<id>ftp-repository</id>
-			<url>ftp://abertschi.ch</url>
-		</repository>
-	</distributionManagement>
+	<profiles>
+		<profile>
+			<id>deploy</id>
+			<activation><activeByDefault>true</activeByDefault></activation>
+			<distributionManagement>
+				<repository>
+					<id>ftp-repository</id>
+					<url>ftp://abertschi.ch/</url>
+				</repository>
+			</distributionManagement>
+		</profile>
+	</profiles>
 
 	<repositories>
 		<repository>
