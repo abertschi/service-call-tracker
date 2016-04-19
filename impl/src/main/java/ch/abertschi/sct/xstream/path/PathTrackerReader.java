@@ -14,13 +14,6 @@ import com.thoughtworks.xstream.converters.ErrorWriter;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.ReaderWrapper;
 
-/**
- * XStream's {@link PathTrackingReader} which is capable to handle events by {@link ReaderContext}.
- * 
- * @author Andrin Bertschi
- * @see PathTrackingReader
- *
- */
 public class PathTrackerReader extends ReaderWrapper {
 
     private PathTracker pathTracker;

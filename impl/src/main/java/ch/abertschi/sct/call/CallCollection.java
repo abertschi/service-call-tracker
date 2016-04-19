@@ -30,40 +30,21 @@ public class CallCollection {
         this.xstream = xstream;
     }
 
-    /**
-     * 
-     * @param request
-     * @param response
-     */
     public void put(Object request, Object response) {
         CallObject reqObj = new CallObject(request);
         CallObject respObj = new CallObject(response);
         Call call = new Call(reqObj, respObj);
         collection.add(call);
     }
-    
-    /**
-     * 
-     * @param call
-     */
+
     public void add(Call call) {
         collection.add(call);
     }
 
-    /**
-     * 
-     * @param request
-     * @return
-     */
     public boolean contains(Object request) {
         return (get(request) == null) ? false : true;
     }
 
-    /**
-     * 
-     * @param key
-     * @return
-     */
     public Object get(Object key) {
         CallComparator comparator = new CallComparator(xstream);
         for (Call call : collection) {

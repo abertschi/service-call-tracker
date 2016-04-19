@@ -15,13 +15,6 @@ import com.thoughtworks.xstream.io.AbstractWriter;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.io.WriterWrapper;
 
-/**
- * XStream's {@link PathTrackerWriter} which is capable to handle events by {@link WriterWrapper}.
- * 
- * @author Andrin Bertschi
- * @see PathTrackerWriter
- *
- */
 public class PathTrackerWriter extends WriterWrapper {
 
     private PathTracker pathTracker;

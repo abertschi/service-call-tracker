@@ -1,7 +1,7 @@
 package ch.abertschi.sct.util;
 
 /**
- * @author C925004
+ * @author Andrin Bertschi
  * @since 03.2014
  */
 public class ResultNotFoundExcetion extends SctException {

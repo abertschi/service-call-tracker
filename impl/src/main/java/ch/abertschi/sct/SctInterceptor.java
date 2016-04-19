@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
 import ch.abertschi.sct.api.SctConfiguration;
 
 /**
- * {@code sct - ServiceCallTracker} <br />
+ * sct - ServiceCallTracker <br />
  * Interceptor for service response loading and service call recording.
  * 
  * @author Andrin Bertschi
