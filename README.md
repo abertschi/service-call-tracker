@@ -20,7 +20,7 @@ A file functions as a storage for various method calls and is provided during ru
 To get started, add the BOM to the dependency management section of your project.
 ```xml
 <dependency>
-    <groupId>org.sct</groupId>
+    <groupId>ch.abertschi.sct</groupId>
     <artifactId>service-call-tracker-bom</artifactId>
     <version>0.0.1-SNAPSHOT</version>
 </dependency>
@@ -30,12 +30,12 @@ The BOM consists of the API and the IMPL of service-call-tracker in compatible v
 
 ```xml
 <dependency>
-  <groupId>org.sct</groupId>
+  <groupId>ch.abertschi.sct</groupId>
   <artifactId>service-call-tracker-impl</artifactId>
 </dependency>
 
 <dependency>
-  <groupId>org.sct</groupId>
+  <groupId>ch.abertschi.sct</groupId>
   <artifactId>service-call-tracker-api</artifactId>
 </dependency>
 ```
@@ -67,7 +67,7 @@ The recordings will look like below:
       <object class="string">Peter</object>
     </request>
     <response>
-      <object class="org.sct.domain.Customer">
+      <object class="ch.abertschi.sct.domain.Customer">
         <name>Peter Parker</name>
         <yearOfBirth>1980</yearOfBirth>
       </object>
@@ -80,7 +80,7 @@ The recordings will look like below:
 ```
 
 Each call consists of a `request` and a `response` object.
-In the example above, a method with the signature `String` and return type `org.sct.domain.Customer`
+In the example above, a method with the signature `String` and return type `ch.abertschi.sct.domain.Customer`
 would return _Peter Parker_ born in _1980_ if it is called with the argument _Peter_.
 
 To exclude parameters from being compared, the keyword `%ANY%` can be used.
@@ -109,7 +109,7 @@ myservice.getCustomer("Peter");
       <object class="string">Peter</object>
     </request>
     <response>
-      <object class="org.sct.domain.Customer">
+      <object class="ch.abertschi.sct.domain.Customer">
         <name>Spiderman</name>
         <yearOfBirth>1980</yearOfBirth>
       </object>
