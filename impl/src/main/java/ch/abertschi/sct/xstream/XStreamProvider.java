@@ -1,6 +1,7 @@
 package ch.abertschi.sct.xstream;
 
 import ch.abertschi.sct.call.Call;
+import ch.abertschi.sct.call.CallCollection;
 import ch.abertschi.sct.call.CallObject;
 import ch.abertschi.sct.xstream.converter.CallObjectConverter;
 import ch.abertschi.sct.xstream.converter.ExclusionReflectionConverter;
@@ -63,6 +64,7 @@ public enum XStreamProvider {
     private void registerAliases(XStream xstream) {
         xstream.alias("call", Call.class);
         xstream.alias("callobject", CallObject.class);
+        xstream.alias("calls", CallCollection.class);
     }
 
     private void applyDefaultConfig(XStream xstream) {

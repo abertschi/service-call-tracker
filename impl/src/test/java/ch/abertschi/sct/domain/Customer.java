@@ -6,9 +6,20 @@ public class Customer {
 
     private int yearOfBirth;
 
+    private String comment;
+
     public Customer(String name, int yearOfBirth) {
         this.name = name;
         this.yearOfBirth = yearOfBirth;
+    }
+
+    public void setComment(String comment)
+    {
+        this.comment = comment;
+    }
+
+    public String getComment(){
+        return this.comment;
     }
 
     public int getYearOfBirth() {

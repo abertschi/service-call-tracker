@@ -20,15 +20,7 @@ public class SctInterceptorTest
             InvocationTargetException, InstantiationException, IOException
     {
         // given: Using Java's dynamic Proxy API to proxy CustomerServiceImpl
-        InvocationHandler handler = new ReflectionInvocationHandler(new CustomerService()
-        {
-            @Override
-            public Customer getCustomer(String key)
-            {
-                return new Customer("Peter Parker", 1980);
-            }
-        });
-        CustomerService service = createProxy(CustomerService.class, handler);
+        CustomerService service = getProxiedCustomerService();
 
         SctConfigurationImpl config = new SctConfigurationImpl();
         SctConfigurator.getInstance().setConfiguration(config);
@@ -36,12 +28,34 @@ public class SctInterceptorTest
         config.setCallRecordingUrl(File.createTempFile("recording", "xml").toURI().toURL());
 
         //when
-        service.getCustomer("Peter");
+        Customer parker = service.getCustomer("Parker");
+        Customer spiderman = service.getCustomer("Spiderman");
+        Customer venom = service.getCustomer("Venom");
 
         // then
         String is = TestHelp.readFile(config.getCallRecordingUrl());
-        System.out.println(is);
-        Assert.assertTrue(is.contains("Peter Parker"));
+        Assert.assertTrue(is.contains("Faked response"));
+
+        Assert.assertEquals(parker.getComment(), "Parker");
+        Assert.assertEquals(spiderman.getComment(), "Spiderman");
+        Assert.assertEquals(venom.getComment(), "Venom");
+
+
+    }
+
+    private CustomerService getProxiedCustomerService()
+    {
+        InvocationHandler handler = new ReflectionInvocationHandler(new CustomerService()
+        {
+            @Override
+            public Customer getCustomer(String key)
+            {
+                Customer c = new Customer("Faked response", 1980);
+                c.setComment(key);
+                return c;
+            }
+        });
+        return createProxy(CustomerService.class, handler);
     }
 
     <T> T createProxy(Class<T> clazz, InvocationHandler handler) {
