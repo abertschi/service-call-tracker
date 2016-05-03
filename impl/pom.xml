@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>ch.abertschi.sct</groupId>
 		<artifactId>service-call-tracker-parent</artifactId>
-		<version>0.0.1-SNAPSHOT</version>
+		<version>0.0.1-alpha2-SNAPSHOT</version>
 	</parent>
 	<artifactId>service-call-tracker-impl</artifactId>
 
@@ -77,7 +77,7 @@
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-simple</artifactId>
-			<version>1.7.7</version>
+			<version>1.5.5</version>
 			<scope>test</scope>
 		</dependency>
 
