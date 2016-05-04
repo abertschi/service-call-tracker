@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>ch.abertschi.sct</groupId>
 		<artifactId>service-call-tracker-parent</artifactId>
-		<version>0.0.1-alpha2-SNAPSHOT</version>
+		<version>0.0.1-alpha3</version>
 	</parent>
 	<artifactId>service-call-tracker-impl</artifactId>
 

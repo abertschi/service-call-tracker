@@ -10,7 +10,7 @@
 
     <groupId>ch.abertschi.sct</groupId>
     <artifactId>service-call-tracker-parent</artifactId>
-    <version>0.0.1-alpha2-SNAPSHOT</version>
+    <version>0.0.1-alpha3</version>
 
     <packaging>pom</packaging>
 
@@ -25,29 +25,6 @@
         <version.org.aspectj>1.7.4</version.org.aspectj>
         <version.org.slf4j.api>1.5.10</version.org.slf4j.api>
     </properties>
-
-    <repositories>
-        <repository>
-            <id>abertschi.snapshots</id>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-            <releases>
-                <enabled>false</enabled>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </repository>
-        <repository>
-            <id>abertschi.releases</id>
-            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </repository>
-    </repositories>
 
     <build>
         <pluginManagement>
