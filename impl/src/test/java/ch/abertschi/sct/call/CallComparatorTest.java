@@ -1,5 +1,7 @@
 package ch.abertschi.sct.call;
 
+import ch.abertschi.sct.newp.serial.CallComparator;
+import ch.abertschi.sct.newp.serial.CallObject;
 import org.junit.Assert;
 import org.junit.Test;
 

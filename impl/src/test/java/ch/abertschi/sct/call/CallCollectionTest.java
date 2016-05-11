@@ -1,7 +1,8 @@
 package ch.abertschi.sct.call;
 
+import ch.abertschi.sct.newp.serial.Call;
+import ch.abertschi.sct.newp.serial.CallCollection;
 import org.junit.Assert;
-import org.junit.Test;
 
 import ch.abertschi.sct.helper.TestHelp;
 import ch.abertschi.sct.xstream.XStreamProvider;
