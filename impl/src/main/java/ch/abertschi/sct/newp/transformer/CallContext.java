@@ -1,7 +1,8 @@
 package ch.abertschi.sct.newp.transformer;
 
-import ch.abertschi.sct.newp.StorageCall;
-import ch.abertschi.sct.newp.StorageContext;
+import ch.abertschi.sct.newp.parse.StorageCall;
+import ch.abertschi.sct.newp.parse.StorageContext;
+import com.github.underscore.$;
 
 /**
  * Created by abertschi on 11/05/16.
@@ -13,6 +14,10 @@ public class CallContext
     private Object requestObject;
 
     private StorageContext storage;
+
+    public CallContext()
+    {
+    }
 
     public Object getRequestObject()
     {
@@ -47,7 +52,14 @@ public class CallContext
         return this;
     }
 
-    public CallContext()
+    public boolean hasStorageCallRequest()
     {
+        return !$.isNull(storageCall) && !$.isNull(storageCall.getRequest());
     }
+
+    public boolean hasStorageCallResponse()
+    {
+        return !$.isNull(storageCall) && !$.isNull(storageCall.getResponse());
+    }
+
 }

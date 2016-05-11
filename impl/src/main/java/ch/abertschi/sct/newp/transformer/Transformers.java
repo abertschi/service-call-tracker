@@ -1,6 +1,6 @@
 package ch.abertschi.sct.newp.transformer;
 
-import ch.abertschi.sct.newp.Node;
+import ch.abertschi.sct.newp.parse.Node;
 
 import java.util.List;
 

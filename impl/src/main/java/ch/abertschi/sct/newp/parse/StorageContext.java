@@ -1,6 +1,5 @@
-package ch.abertschi.sct.newp;
+package ch.abertschi.sct.newp.parse;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 

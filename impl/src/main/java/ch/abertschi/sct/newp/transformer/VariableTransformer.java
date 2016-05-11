@@ -1,10 +1,10 @@
 package ch.abertschi.sct.newp.transformer;
 
-import com.github.underscore.$;
 import de.odysseus.el.ExpressionFactoryImpl;
 import de.odysseus.el.util.SimpleContext;
 
 import javax.el.*;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 import java.util.regex.Pattern;
@@ -16,8 +16,6 @@ public class VariableTransformer implements Transformer
 {
     private static final Pattern PATTERN_IS_EXPRESSION = Pattern.compile("[#|\\{]([^}]*)}");
 
-    private String[] VARS = {"env", "system"};
-
     private SimpleContext elContext;
 
     private ExpressionFactory factory;
@@ -27,11 +25,6 @@ public class VariableTransformer implements Transformer
         createElContext();
     }
 
-    public static void main(String[] args)
-    {
-        new VariableTransformer().createElContext();
-    }
-
     protected void createElContext()
     {
         this.factory = new ExpressionFactoryImpl();
@@ -39,17 +32,23 @@ public class VariableTransformer implements Transformer
 
         elContext.setVariable("env", factory.createValueExpression(System.getenv(), Map.class));
         elContext.setVariable("system", factory.createValueExpression(System.getProperties(), Properties.class));
+        elContext.setVariable("regex", factory.createValueExpression(getRegex(), Map.class));
+    }
 
-        //ValueExpression e = factory.createValueExpression(elContext, "Hello ${request}!", String.class);
-        //System.out.println(e.getValue(elContext)); // --> Hello, bar!
-        //System.out.println("out");
+    protected Map<String, String> getRegex()
+    {
+        Map<String, String> regex = new HashMap<>();
+        regex.put("any", ".*");
+        regex.put("numeric", "[0-9]*");
+
+        return regex;
     }
 
 
     @Override
     public boolean canTransform(CallContext context, String input)
     {
-        return PATTERN_IS_EXPRESSION.matcher(input).find() && $.indexOf(VARS, input) > -1;
+        return PATTERN_IS_EXPRESSION.matcher(input).find();
 
     }
 
@@ -57,7 +56,7 @@ public class VariableTransformer implements Transformer
     public String transform(CallContext context, String input)
     {
         ValueExpression expression = factory.createValueExpression(elContext, input, String.class);
-        String transformed = null;
+        String transformed;
         try
         {
             transformed = (String) expression.getValue(elContext);

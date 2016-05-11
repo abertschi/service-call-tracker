@@ -1,5 +1,6 @@
 package ch.abertschi.sct.newp;
 
+import ch.abertschi.sct.newp.parse.*;
 import ch.abertschi.sct.newp.transformer.*;
 import com.github.underscore.$;
 import org.jdom2.JDOMException;
@@ -28,22 +29,21 @@ public class CallCollection
         StorageParser parser = new StorageParser();
         this.storage = parser.parseXml(xml);
         this.requestTransformers = getRequestTransformers();
-
     }
 
-    public static void main(String[] args) throws Exception
+    public static void main(String[] args) throws Throwable
     {
         String hello = "hi";
         new CallCollection().lookup(hello);
 
     }
 
-    public Object lookup(Object request) throws IOException, JDOMException
+    public Object lookup(Object request) throws Throwable
     {
         CallContext context = new CallContext();
         context.setRequestObject(request);
 
-        StorageCall call = findMatchingCall(context, request);
+        StorageCall call = findMatchingCall(context);
         if (!$.isNull(call))
         {
             context.setStorageCall(call);
@@ -54,21 +54,24 @@ public class CallCollection
         return null;
     }
 
-    protected StorageCall findMatchingCall(CallContext context, Object request)
+    protected StorageCall findMatchingCall(CallContext context)
     {
+        StorageCall found = null;
+
         for (StorageCall call : this.storage.getCalls())
         {
-            StorageCallRequest storageRequest = call.getRequest();
-            Node requestNode = storageRequest.getPayloadNode();
-            context.setStorageCall(call); // TODO:
-            Transformers.transform(requestNode, this.requestTransformers, context);
+            context.setStorageCall(call); // TODO: not thread save, improve
+            StorageCallRequest request = call.getRequest();
+            Node node = request.getPayloadNode();
+            Transformers.transform(node, this.requestTransformers, context);
 
-            if (requestNode.doesMatchWith(request))
+            if (NodeUtils.doesNodeMatchWithObject(request.getPayloadType(), node, context.getRequestObject()))
             {
-                return call;
+                found = call;
+                break;
             }
         }
-        return null;
+        return found;
     }
 
     protected List<Transformer> getRequestTransformers()
