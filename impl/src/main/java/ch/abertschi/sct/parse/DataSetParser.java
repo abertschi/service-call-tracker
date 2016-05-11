@@ -1,5 +1,7 @@
-package ch.abertschi.sct.newp.parse;
+package ch.abertschi.sct.parse;
 
+import ch.abertschi.sct.node.Node;
+import ch.abertschi.sct.node.NodeUtil;
 import com.github.underscore.$;
 import org.jdom2.Document;
 import org.jdom2.Element;
@@ -15,18 +17,18 @@ import java.util.List;
 /**
  * Created by abertschi on 11/05/16.
  */
-public class StorageParser
+public class DataSetParser
 {
-    public StorageContext parseXml(String xml) throws JDOMException, IOException
+    public ParserContext parseXml(String xml) throws JDOMException, IOException
     {
         SAXBuilder builder = new SAXBuilder();
         Document document = builder.build(new StringReader(xml));
         Element rootElement = document.getRootElement();
 
-        List<StorageCall> storageCalls = new LinkedList<>();
+        List<ParserCall> storageCalls = new LinkedList<>();
         rootElement.getChild("calls").getChildren("call").forEach(callElement -> {
 
-            StorageCall call = new StorageCall()
+            ParserCall call = new ParserCall()
                     .setRequest(parseRequest(callElement))
                     .setResponse(parseResponse(callElement));
 
@@ -35,14 +37,14 @@ public class StorageParser
             storageCalls.add(call);
         });
 
-        StorageContext context = new StorageContext();
+        ParserContext context = new ParserContext();
         context.setCalls(storageCalls);
 
         return context;
     }
 
 
-    private StorageCallRequest parseRequest(Element element)
+    private ParserCallRequest parseRequest(Element element)
     {
         XMLOutputter output = new XMLOutputter();
 
@@ -52,17 +54,17 @@ public class StorageParser
 
         if (!$.isNull(payload))
         {
-            payloadNode = NodeUtils.parseDomToNode(payload);
+            payloadNode = NodeUtil.parseDomToNode(payload);
         }
 
-        return new StorageCallRequest()
+        return new ParserCallRequest()
                 .setPayloadRaw(output.outputString(payload))
                 .setPayloadType(payload.getAttributeValue("class"))
                 .setPayloadNode(payloadNode);
 
     }
 
-    private StorageCallResponse parseResponse(Element element)
+    private ParserCallResponse parseResponse(Element element)
     {
         XMLOutputter output = new XMLOutputter();
 
@@ -75,14 +77,14 @@ public class StorageParser
 
         if (!$.isNull(payload))
         {
-            payloadNode = NodeUtils.parseDomToNode(payload);
+            payloadNode = NodeUtil.parseDomToNode(payload);
         }
 
         String stacktraceValue = stacktrace != null ? stacktrace.getText() : null;
         String scriptValue = script != null ? script.getText() : null;
         String typeValue = payload.getAttributeValue("class");
 
-        return new StorageCallResponse()
+        return new ParserCallResponse()
                 .setPayloadRaw(output.outputString(payload))
                 .setPayloadType(typeValue)
                 .setScript(scriptValue)

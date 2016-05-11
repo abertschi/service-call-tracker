@@ -1,9 +1,11 @@
-package ch.abertschi.sct.newp.parse;
+package ch.abertschi.sct.parse;
+
+import ch.abertschi.sct.node.Node;
 
 /**
  * Created by abertschi on 11/05/16.
  */
-public class StorageCallResponse
+public class ParserCallResponse
 {
     private String payloadRaw;
 
@@ -18,7 +20,7 @@ public class StorageCallResponse
         return payloadNode;
     }
 
-    public StorageCallResponse setPayloadNode(Node payloadNode)
+    public ParserCallResponse setPayloadNode(Node payloadNode)
     {
         this.payloadNode = payloadNode;
         return this;
@@ -29,7 +31,7 @@ public class StorageCallResponse
         return payloadRaw;
     }
 
-    public StorageCallResponse setPayloadRaw(String payloadRaw)
+    public ParserCallResponse setPayloadRaw(String payloadRaw)
     {
         this.payloadRaw = payloadRaw;
         return this;
@@ -40,7 +42,7 @@ public class StorageCallResponse
         return payloadType;
     }
 
-    public StorageCallResponse setPayloadType(String payloadType)
+    public ParserCallResponse setPayloadType(String payloadType)
     {
         this.payloadType = payloadType;
         return this;
@@ -51,7 +53,7 @@ public class StorageCallResponse
         return script;
     }
 
-    public StorageCallResponse setScript(String script)
+    public ParserCallResponse setScript(String script)
     {
         this.script = script;
         return this;
@@ -62,7 +64,7 @@ public class StorageCallResponse
         return stacktrace;
     }
 
-    public StorageCallResponse setStacktrace(String stacktrace)
+    public ParserCallResponse setStacktrace(String stacktrace)
     {
         this.stacktrace = stacktrace;
         return this;

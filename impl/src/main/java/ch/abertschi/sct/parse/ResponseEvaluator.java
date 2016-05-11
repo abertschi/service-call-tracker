@@ -1,9 +1,9 @@
-package ch.abertschi.sct.newp;
+package ch.abertschi.sct.parse;
 
-import ch.abertschi.sct.newp.parse.NodeUtils;
-import ch.abertschi.sct.newp.parse.StorageCall;
-import ch.abertschi.sct.newp.parse.StorageCallResponse;
-import ch.abertschi.sct.newp.transformer.*;
+import ch.abertschi.sct.node.NodeUtil;
+import ch.abertschi.sct.parse.ParserCall;
+import ch.abertschi.sct.parse.ParserCallResponse;
+import ch.abertschi.sct.transformer.*;
 import ch.abertschi.unserialize.StackTraceUnserialize;
 import com.github.underscore.$;
 import groovy.lang.Binding;
@@ -19,11 +19,11 @@ public class ResponseEvaluator
 {
     private List<Transformer> transformers;
 
-    private StorageCall call;
+    private ParserCall call;
 
     private CallContext context;
 
-    public ResponseEvaluator(CallContext context, StorageCall call)
+    public ResponseEvaluator(CallContext context, ParserCall call)
     {
         this.call = call;
         this.context = context;
@@ -59,7 +59,7 @@ public class ResponseEvaluator
 
     private Throwable createStackTrace()
     {
-        StorageCallResponse response = this.call.getResponse();
+        ParserCallResponse response = this.call.getResponse();
         Throwable exception = null;
         if (isStackTrace())
         {
@@ -73,11 +73,11 @@ public class ResponseEvaluator
     private Object createPayload()
     {
         Object payload = null;
-        StorageCallResponse response = this.call.getResponse();
+        ParserCallResponse response = this.call.getResponse();
         if (isPayload())
         {
             Transformers.transform(response.getPayloadNode(), transformers, context);
-            payload = NodeUtils.createObject(response.getPayloadType(), response.getPayloadNode());
+            payload = NodeUtil.createObject(response.getPayloadType(), response.getPayloadNode());
         }
         return payload;
     }
@@ -103,19 +103,19 @@ public class ResponseEvaluator
 
     private boolean isScript()
     {
-        StorageCallResponse r = this.call.getResponse();
+        ParserCallResponse r = this.call.getResponse();
         return !$.isNull(r.getScript()) && !r.getScript().trim().isEmpty();
     }
 
     private boolean isStackTrace()
     {
-        StorageCallResponse r = this.call.getResponse();
+        ParserCallResponse r = this.call.getResponse();
         return !$.isNull(r.getStacktrace()) && !r.getStacktrace().trim().isEmpty();
     }
 
     private boolean isPayload()
     {
-        StorageCallResponse r = this.call.getResponse();
+        ParserCallResponse r = this.call.getResponse();
         return !$.isNull(r.getPayloadType())
                 && !r.getPayloadType().trim().isEmpty()
                 && !$.isNull(r.getPayloadNode());

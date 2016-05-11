@@ -1,4 +1,4 @@
-package ch.abertschi.sct.newp.parse;
+package ch.abertschi.sct.node;
 
 import com.github.underscore.$;
 import com.thoughtworks.xstream.XStream;
@@ -16,7 +16,7 @@ import java.util.List;
 /**
  * Created by abertschi on 11/05/16.
  */
-public class NodeUtils
+public class NodeUtil
 {
     private static final XStream XSTREAM = new XStream();
 

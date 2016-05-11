@@ -1,7 +1,9 @@
-package ch.abertschi.sct.newp;
+package ch.abertschi.sct.parse;
 
-import ch.abertschi.sct.newp.parse.*;
-import ch.abertschi.sct.newp.transformer.*;
+import ch.abertschi.sct.CallCollectable;
+import ch.abertschi.sct.node.Node;
+import ch.abertschi.sct.node.NodeUtil;
+import ch.abertschi.sct.transformer.*;
 import com.github.underscore.$;
 import org.jdom2.JDOMException;
 
@@ -15,18 +17,19 @@ import java.util.List;
 /**
  * Created by abertschi on 11/05/16.
  */
-public class CallCollection
+public class ParserCallCollection implements CallCollectable
 {
-    private StorageContext storage;
+    private ParserContext storage;
+
     private List<Transformer> requestTransformers;
 
-    public CallCollection() throws IOException, JDOMException
+    public ParserCallCollection() throws IOException, JDOMException
     {
-        String path = new File(new File("."), "impl/src/main/java/ch/abertschi/sct/newp/storage.xml").getAbsolutePath();
+        String path = new File(new File("."), "impl/src/main/java/ch/abertschi/sct/storage.xml").getAbsolutePath();
         byte[] encoded = Files.readAllBytes(Paths.get(path));
         String xml = new String(encoded);
 
-        StorageParser parser = new StorageParser();
+        DataSetParser parser = new DataSetParser();
         this.storage = parser.parseXml(xml);
         this.requestTransformers = getRequestTransformers();
     }
@@ -34,38 +37,47 @@ public class CallCollection
     public static void main(String[] args) throws Throwable
     {
         String hello = "hi";
-        new CallCollection().lookup(hello);
+        new ParserCallCollection().get(hello);
 
     }
 
-    public Object lookup(Object request) throws Throwable
+    @Override
+    public Object get(Object request) throws Throwable
     {
+        Object response = null;
         CallContext context = new CallContext();
         context.setRequestObject(request);
 
-        StorageCall call = findMatchingCall(context);
+        ParserCall call = findMatchingCall(context);
         if (!$.isNull(call))
         {
             context.setStorageCall(call);
             ResponseEvaluator eval = new ResponseEvaluator(context, call);
-            return eval.evaluate();
+            response = eval.evaluate();
         }
 
-        return null;
+        return response;
     }
 
-    protected StorageCall findMatchingCall(CallContext context)
+    @Override
+    public void put(Object request, Object response)
     {
-        StorageCall found = null;
 
-        for (StorageCall call : this.storage.getCalls())
+    }
+
+
+    protected ParserCall findMatchingCall(CallContext context)
+    {
+        ParserCall found = null;
+
+        for (ParserCall call : this.storage.getCalls())
         {
             context.setStorageCall(call); // TODO: not thread save, improve
-            StorageCallRequest request = call.getRequest();
+            ParserCallRequest request = call.getRequest();
             Node node = request.getPayloadNode();
             Transformers.transform(node, this.requestTransformers, context);
 
-            if (NodeUtils.doesNodeMatchWithObject(request.getPayloadType(), node, context.getRequestObject()))
+            if (NodeUtil.doesNodeMatchWithObject(request.getPayloadType(), node, context.getRequestObject()))
             {
                 found = call;
                 break;
@@ -74,6 +86,7 @@ public class CallCollection
         return found;
     }
 
+
     protected List<Transformer> getRequestTransformers()
     {
         List<Transformer> transformers = new ArrayList<>();
@@ -81,6 +94,4 @@ public class CallCollection
         transformers.add(new FieldReferenceTransformer());
         return transformers;
     }
-
-
 }
