@@ -6,7 +6,7 @@
                 <payload
                         class="com.foo.PartnerInfoGet_11CORBAClient$CInOp1">
                     <wv__header>
-                        <trace__level>${env.SYS_PROPERTY}</trace__level>
+                        <trace__level>test</trace__level>
                         <user__lang__cd>de</user__lang__cd>
                         <client__id>APP-682</client__id>
                     </wv__header>
@@ -14,7 +14,7 @@
                         <com.foo.PartnerInfoGet__11Package.InOp01>
                             <mand__cdu>1</mand__cdu>
                             <gi__part__id>true</gi__part__id>
-                            <part__id>${request.payload.wv__header.trave__level}</part__id>
+                            <part__id>${request.payload.wv__header.trace__level}</part__id>
                             <gi__part__nr>false</gi__part__nr>
                             <part__nr>0</part__nr>
                             <gi__adr__nr>false</gi__adr__nr>

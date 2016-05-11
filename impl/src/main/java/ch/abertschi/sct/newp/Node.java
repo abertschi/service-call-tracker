@@ -28,6 +28,11 @@ public class Node
     {
     }
 
+    public boolean doesMatchWith(Object object)
+    {
+        return false;
+    }
+
     public NodeType determineType()
     {
         return determineType(this.value);

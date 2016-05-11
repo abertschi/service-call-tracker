@@ -1,5 +1,7 @@
 package ch.abertschi.sct.newp;
 
+import ch.abertschi.sct.newp.transformer.*;
+import com.github.underscore.$;
 import org.jdom2.JDOMException;
 
 import java.io.File;
@@ -14,9 +16,18 @@ import java.util.List;
  */
 public class CallCollection
 {
-    public CallCollection()
-    {
+    private StorageContext storage;
+    private List<Transformer> requestTransformers;
 
+    public CallCollection() throws IOException, JDOMException
+    {
+        String path = new File(new File("."), "impl/src/main/java/ch/abertschi/sct/newp/storage.xml").getAbsolutePath();
+        byte[] encoded = Files.readAllBytes(Paths.get(path));
+        String xml = new String(encoded);
+
+        StorageParser parser = new StorageParser();
+        this.storage = parser.parseXml(xml);
+        this.requestTransformers = getRequestTransformers();
 
     }
 
@@ -29,48 +40,44 @@ public class CallCollection
 
     public Object lookup(Object request) throws IOException, JDOMException
     {
-        String path = new File(new File("."), "impl/src/main/java/ch/abertschi/sct/newp/storage.xml").getAbsolutePath();
-        byte[] encoded = Files.readAllBytes(Paths.get(path));
-        String xml = new String(encoded);
+        CallContext context = new CallContext();
+        context.setRequestObject(request);
 
-        StorageParser parser = new StorageParser();
-        StorageContext storage = parser.parseXml(xml);
-        List<Transformer> transformers = new ArrayList<>();
-        transformers.add(new VariableTransformer());
-        transformers.add(new FieldReferenceTransformer());
+        StorageCall call = findMatchingCall(context, request);
+        if (!$.isNull(call))
+        {
+            context.setStorageCall(call);
+            ResponseEvaluator eval = new ResponseEvaluator(context, call);
+            return eval.evaluate();
+        }
 
-        storage.getCalls().forEach(call -> {
-            TransformingContext transformingContext = new TransformingContext();
-            transformingContext.setRequestObject(request);
-            transformingContext.setStorageCall(call);
-
-            StorageCallRequest storageRequest = call.getRequest();
-            Node node = storageRequest.getPayloadNode();
-
-            System.out.println(node.getChildren().size());
-            transform(node, transformers, transformingContext);
-
-        });
         return null;
     }
 
-    private void transform(Node node, List<Transformer> transformers, TransformingContext context)
+    protected StorageCall findMatchingCall(CallContext context, Object request)
     {
-        System.out.println(node.isContainer() + node.getName() + node.getChildren().get(2).getName());
-        if (node.isContainer())
+        for (StorageCall call : this.storage.getCalls())
         {
-            for(Node n: node.getChildren())
+            StorageCallRequest storageRequest = call.getRequest();
+            Node requestNode = storageRequest.getPayloadNode();
+            context.setStorageCall(call); // TODO:
+            Transformers.transform(requestNode, this.requestTransformers, context);
+
+            if (requestNode.doesMatchWith(request))
             {
-                //transform(n, transformers, context);
+                return call;
             }
-            //node.getChildren().forEach(child -> transform(child, transformers, context));
         }
-        else
-        {
-            transformers
-                    .stream()
-                    .filter(t -> t.canTransform(context, node.getValue()))
-                    .forEach(t -> node.setValue(t.transform(context, node.getValue())));
-        }
+        return null;
     }
+
+    protected List<Transformer> getRequestTransformers()
+    {
+        List<Transformer> transformers = new ArrayList<>();
+        transformers.add(new VariableTransformer());
+        transformers.add(new FieldReferenceTransformer());
+        return transformers;
+    }
+
+
 }

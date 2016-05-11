@@ -39,7 +39,7 @@ public class StorageParser
                     .setRequest(parseRequest(callElement))
                     .setResponse(parseResponse(callElement));
 
-            System.out.println(new XStream().toXML(call));
+            //System.out.println(new XStream().toXML(call));
 
             storageCalls.add(call);
         });
@@ -54,38 +54,30 @@ public class StorageParser
     {
         Node node = new Node();
         node.setName(element.getName());
-        List<Node> nodeChildren = new LinkedList<>();
 
+        if (!$.isNull(parent))
+        {
+            parent.getChildren().add(node);
+        }
+
+        List<Node> nodeChildren = new LinkedList<>();
         List<Element> children = element.getChildren();
+
         if ($.isEmpty(children))
         {
             node.setIsContainer(false);
             node.setValue(element.getValue());
-            System.out.println(element.getName());
         }
         else
         {
             node.setIsContainer(true);
-            for(Element child: children)
+            for (Element child : children)
             {
-                System.out.println(child.getName());
                 nodeChildren.add(parseNodeTree(child, node));
             }
         }
-
         node.setChildren(nodeChildren);
-        System.out.println(node.getChildren().size());
-        if (parent != null)
-        {
-            parent.getChildren().add(node);
-            //System.out.println(node.getName() + node.isContainer());
-        }
-        else
-        {
-            System.out.println("dadsfasdf" + node.getName());
-            parent = node;
-        }
-        return parent;
+        return node;
     }
 
 

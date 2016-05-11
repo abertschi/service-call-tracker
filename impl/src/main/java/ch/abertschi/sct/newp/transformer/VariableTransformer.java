@@ -1,4 +1,4 @@
-package ch.abertschi.sct.newp;
+package ch.abertschi.sct.newp.transformer;
 
 import com.github.underscore.$;
 import de.odysseus.el.ExpressionFactoryImpl;
@@ -47,14 +47,14 @@ public class VariableTransformer implements Transformer
 
 
     @Override
-    public boolean canTransform(TransformingContext context, String input)
+    public boolean canTransform(CallContext context, String input)
     {
         return PATTERN_IS_EXPRESSION.matcher(input).find() && $.indexOf(VARS, input) > -1;
 
     }
 
     @Override
-    public String transform(TransformingContext context, String input)
+    public String transform(CallContext context, String input)
     {
         ValueExpression expression = factory.createValueExpression(elContext, input, String.class);
         String transformed = null;
