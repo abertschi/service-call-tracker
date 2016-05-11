@@ -1,0 +1,88 @@
+<storage>
+    <calls>
+
+        <call>
+            <request>
+                <payload
+                        class="com.foo.PartnerInfoGet_11CORBAClient$CInOp1">
+                    <wv__header>
+                        <trace__level>${env.SYS_PROPERTY}</trace__level>
+                        <user__lang__cd>de</user__lang__cd>
+                        <client__id>APP-682</client__id>
+                    </wv__header>
+                    <in__op01__liste>
+                        <com.foo.PartnerInfoGet__11Package.InOp01>
+                            <mand__cdu>1</mand__cdu>
+                            <gi__part__id>true</gi__part__id>
+                            <part__id>${request.payload.wv__header.trave__level}</part__id>
+                            <gi__part__nr>false</gi__part__nr>
+                            <part__nr>0</part__nr>
+                            <gi__adr__nr>false</gi__adr__nr>
+                            <adr__nr>0</adr__nr>
+                            <gi__bic>false</gi__bic>
+                            <bic></bic>
+                            <gi__iban>false</gi__iban>
+                            <iban></iban>
+                            <gi__mwst__nr>false</gi__mwst__nr>
+                            <mwst__nr></mwst__nr>
+                            <gueltig__am>${regex("[0-9]*")}</gueltig__am>
+                            <ausgb__awahl>${any}
+                            </ausgb__awahl>
+                        </com.foo.PartnerInfoGet__11Package.InOp01>
+                    </in__op01__liste>
+                </payload>
+            </request>
+            <response>
+                <stacktrace>
+                    <![CDATA[
+       at org.jboss.modules.ModuleClassLoader.defineClass(ModuleClassLoader.java:487) [jboss-modules.jar:1.3.3.Final-redhat-1]
+       at org.jboss.modules.ModuleClassLoader.loadClassLocal(ModuleClassLoader.java:277) [jboss-modules.jar:1.3.3.Final-redhat-1]
+       at org.jboss.modules.ModuleClassLoader$1.loadClassLocal(ModuleClassLoader.java:92) [jboss-modules.jar:1.3.3.Final-redhat-1]
+       at org.jboss.modules.Module.loadModuleClass(Module.java:568) [jboss-modules.jar:1.3.3.Final-redhat-1]
+       at org.jboss.modules.ModuleClassLoader.findClass(ModuleClassLoader.java:205) [jboss-modules.jar:1.3.3.Final-redhat-1]
+       at org.jboss.modules.ConcurrentClassLoader.performLoadClassUnchecked(ConcurrentClassLoader.java:459) [jboss-modules.jar:1.3.3.Final-redhat-1]
+       at org.jboss.modules.ConcurrentClassLoader.performLoadClassChecked(ConcurrentClassLoader.java:408) [jboss-modules.jar:1.3.3.Final-redhat-1]
+       at org.jboss.modules.ConcurrentClassLoader.performLoadClass(ConcurrentClassLoader.java:389) [jboss-modules.jar:1.3.3.Final-redhat-1]
+       at org.jboss.modules.ConcurrentClassLoader.loadClass(ConcurrentClassLoader.java:134) [jboss-modules.jar:1.3.3.Final-redhat-1]
+       at org.eclipse.core.runtime.Platform.<clinit>(Platform.java:434) [genericServices-1.1.107.jar:1.6.1]
+       at org.eclipse.emf.common.EMFPlugin.<clinit>(EMFPlugin.java:70) [emf-common-2.7.0.jar:]
+       at org.eclipse.emf.ecore.impl.EPackageRegistryImpl.createGlobalRegistry(EPackageRegistryImpl.java:57) [emf-ecore-2.7.0.jar:]
+       at org.eclipse.emf.ecore.EPackage$Registry.<clinit>(EPackage.java:81) [emf-ecore-2.7.0.jar:]
+       at com.axa.ch.presentation.persistence.ModelPersistenceUtility.loadMetadataFromStream(ModelPersistenceUtility.java:60) [presentation-model-4.1.12
+Caused by: java.lang.ClassNotFoundException: org.eclipse.osgi.util.NLS from [Module "deployment.partneraccess-inttest.ear:main" from Service Module Loader]
+       at org.jboss.modules.ModuleClassLoader.findClass(ModuleClassLoader.java:213) [jboss-modules.jar:1.3.3.Final-redhat-1]
+       at org.jboss.modules.ConcurrentClassLoader.performLoadClassUnchecked(ConcurrentClassLoader.java:459) [jboss-modules.jar:1.3.3.Final-redhat-1]
+       at org.jboss.modules.ConcurrentClassLoader.performLoadClassChecked(ConcurrentClassLoader.java:408) [jboss-modules.jar:1.3.3.Final-redhat-1]
+       at org.jboss.modules.ConcurrentClassLoader.performLoadClass(ConcurrentClassLoader.java:389) [jboss-modules.jar:1.3.3.Final-redhat-1]
+       at org.jboss.modules.ConcurrentClassLoader.loadClass(ConcurrentClassLoader.java:134) [jboss-modules.jar:1.3.3.Final-redhat-1]
+       ... 68 more
+]]>
+                </stacktrace>
+                <script>
+                    <![CDATA[
+
+                  // access request context
+                  Exception e = new RuntimeException("exception from appl " + $.request.wv__header.client__id);
+
+                  // access stacktrace as instance of type throwable
+                  throw $.response.stacktrace
+
+                  // modify response with script
+                  List<String> list = new ArrayList<>();
+                  for(i = 0; i < 10; i ++) {
+                    list.add($.response.payload.message + i);
+                  }
+                  return list;
+
+                  // access env var
+                  $.env.MY_SYSTEM_PROPERTY
+
+                ]]>
+                </script>
+                <payload>
+                    <message>hello</message>
+                </payload>
+            </response>
+        </call>
+    </calls>
+</storage>
