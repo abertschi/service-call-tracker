@@ -16,5 +16,4 @@ public class SctContext {
     public void setConfiguration(SctConfiguration configuration) {
         this.configuration = configuration;
     }
-
 }

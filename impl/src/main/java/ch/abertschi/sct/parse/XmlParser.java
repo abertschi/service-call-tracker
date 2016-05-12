@@ -63,10 +63,10 @@ public class XmlParser
         if (!$.isNull(payload))
         {
             payloadNode = NodeUtils.parseDomToNode(payload);
+            payloadNode.setClassType(payload.getAttributeValue("class"));
         }
         return new ParserRequest()
                 .setPayloadRaw(output.outputString(payload))
-                .setPayloadType(payload.getAttributeValue("class"))
                 .setPayloadNode(payloadNode);
     }
 
@@ -82,14 +82,13 @@ public class XmlParser
         if (!$.isNull(payload))
         {
             payloadNode = NodeUtils.parseDomToNode(payload);
+            String typeValue = payload.getAttributeValue("class");
+            payloadNode.setClassType(typeValue);
         }
         String stacktraceValue = $.isNull(stacktrace) ? null : stacktrace.getText();
         String scriptValue = $.isNull(script) ? null : script.getText();
-        String typeValue = payload.getAttributeValue("class");
-
         return new ParserResponse()
                 .setPayloadRaw(output.outputString(payload))
-                .setPayloadType(typeValue)
                 .setScript(scriptValue)
                 .setStacktrace(stacktraceValue)
                 .setPayloadNode(payloadNode);

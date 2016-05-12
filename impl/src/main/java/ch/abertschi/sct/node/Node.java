@@ -2,6 +2,7 @@ package ch.abertschi.sct.node;
 
 import com.github.underscore.$;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -17,6 +18,7 @@ public class Node
 
     private String name;
     private String value;
+    private String classType;
 
     private boolean isContainer;
     private List<Node> children = new LinkedList<>();
@@ -71,13 +73,18 @@ public class Node
 
     public String toXml(Map<String, String> attributes)
     {
-        StringBuilder attributeBuilder = new StringBuilder();
-        if (!$.isEmpty(attributes))
+        if ($.isNull(attributes))
         {
-            for (Map.Entry<String, String> entry : attributes.entrySet())
-            {
-                attributeBuilder.append(String.format(" %s=\"%s\"", entry.getKey(), entry.getValue()));
-            }
+            attributes = new HashMap<>();
+        }
+        if (!$.isNull(classType) && !classType.isEmpty())
+        {
+            attributes.put("class", classType);
+        }
+        StringBuilder attributeBuilder = new StringBuilder();
+        for (Map.Entry<String, String> entry : attributes.entrySet())
+        {
+            attributeBuilder.append(String.format(" %s=\"%s\"", entry.getKey(), entry.getValue()));
         }
         StringBuilder childrenXml = new StringBuilder();
         if (!$.isEmpty(children))
@@ -136,6 +143,17 @@ public class Node
     public Node setValue(String value)
     {
         this.value = value;
+        return this;
+    }
+
+    public String getClassType()
+    {
+        return classType;
+    }
+
+    public Node setClassType(String classType)
+    {
+        this.classType = classType;
         return this;
     }
 

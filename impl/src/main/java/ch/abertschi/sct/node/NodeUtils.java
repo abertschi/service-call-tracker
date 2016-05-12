@@ -1,5 +1,6 @@
 package ch.abertschi.sct.node;
 
+import ch.abertschi.sct.serial.XStreamProvider;
 import com.github.underscore.$;
 import com.thoughtworks.xstream.XStream;
 import org.jdom2.Document;
@@ -18,16 +19,26 @@ import java.util.List;
  */
 public class NodeUtils
 {
-    private static final XStream XSTREAM = new XStream();
+    private static final XStream XSTREAM = XStreamProvider.createXStream();
+
+    public static Node createNodeFromObject(Object object)
+    {
+        Document document = xmlToDocument(toRawXml(object));
+        Element rootElement = document.getRootElement();
+        return parseDomToNode(rootElement);
+    }
+
+    public static String toRawXml(Object object)
+    {
+        return XSTREAM.toXML(object);
+    }
 
     public static boolean doesNodeMatchWithObject(String type, Node node, Object object)
     {
         boolean success = false;
         if (type.equals(object.getClass().getCanonicalName()))
         {
-            Document document = xmlToDocument(XSTREAM.toXML(object));
-            Element rootElement = document.getRootElement();
-            Node otherNode = parseDomToNode(rootElement);
+            Node otherNode = createNodeFromObject(object);
             success = node.doesMatchWith(otherNode);
         }
         return success;
@@ -64,7 +75,6 @@ public class NodeUtils
         node.setChildren(nodeChildren);
         return node;
     }
-
 
     public static Object createObjectWithNode(String type, Node node)
     {
