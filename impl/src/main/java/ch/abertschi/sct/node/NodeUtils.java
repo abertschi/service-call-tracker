@@ -16,28 +16,9 @@ import java.util.List;
 /**
  * Created by abertschi on 11/05/16.
  */
-public class NodeUtil
+public class NodeUtils
 {
     private static final XStream XSTREAM = new XStream();
-
-    public static Document xmlToDocument(String xml)
-    {
-        SAXBuilder builder = new SAXBuilder();
-        Document document = null;
-        try
-        {
-            document = builder.build(new StringReader(xml));
-        }
-        catch (JDOMException e)
-        {
-            throw new RuntimeException("Cant parse xml", e);
-        }
-        catch (IOException e)
-        {
-            throw new RuntimeException("IO Problems with xml", e);
-        }
-        return document;
-    }
 
     public static boolean doesNodeMatchWithObject(String type, Node node, Object object)
     {
@@ -61,15 +42,12 @@ public class NodeUtil
     {
         Node node = new Node();
         node.setName(element.getName());
-
         if (!$.isNull(parent))
         {
             parent.getChildren().add(node);
         }
-
         List<Node> nodeChildren = new LinkedList<>();
         List<Element> children = element.getChildren();
-
         if ($.isEmpty(children))
         {
             node.setIsContainer(false);
@@ -88,30 +66,32 @@ public class NodeUtil
     }
 
 
-    public static Object createObject(String type, Node node)
+    public static Object createObjectWithNode(String type, Node node)
     {
-        HashMap<String, String> atts = new HashMap<>();
-        atts.put("class", type);
-        String xml = node.toXml(atts);
+        HashMap<String, String> attributes = new HashMap<>();
+        attributes.put("class", type);
+        String xml = node.toXml(attributes);
         return XSTREAM.fromXML(xml);
     }
 
-    public static Node findNode(String key, Node rootNode)
+    /**
+     * Find a node by key. The key represents the requested node in its hierarchy
+     * within the rootNode. Example of a valid key for child2: rootNodeName.child1.child2
+     */
+    public static Node findNodeInTree(String key, Node rootNode)
     {
-        return findNode(key, rootNode, null);
+        return findNodeInTree(key, rootNode, null);
     }
 
-    protected static Node findNode(String key, Node node, LinkedList<Node> history)
+    protected static Node findNodeInTree(String key, Node node, LinkedList<Node> history)
     {
         Node found = null;
-
         if ($.isNull(history))
         {
             history = new LinkedList<>();
         }
         history.add(node);
         String historyKey = generateKey(history);
-
         if (key.equals(historyKey))
         {
             found = node;
@@ -122,7 +102,7 @@ public class NodeUtil
             {
                 for (Node child : node.getChildren())
                 {
-                    found = findNode(key, child, history);
+                    found = findNodeInTree(key, child, history);
                     if (!$.isNull(found))
                     {
                         break;
@@ -143,5 +123,24 @@ public class NodeUtil
         history.forEach(node -> keyBuffer.append("." + node.getName()));
         String key = keyBuffer.toString();
         return key.length() > 0 ? key.substring(1) : null;
+    }
+
+    public static Document xmlToDocument(String xml)
+    {
+        SAXBuilder builder = new SAXBuilder();
+        Document document = null;
+        try
+        {
+            document = builder.build(new StringReader(xml));
+        }
+        catch (JDOMException e)
+        {
+            throw new RuntimeException("Cant parse xml", e);
+        }
+        catch (IOException e)
+        {
+            throw new RuntimeException("IO Problems with xml", e);
+        }
+        return document;
     }
 }

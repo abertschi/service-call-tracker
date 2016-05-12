@@ -1,7 +1,7 @@
 package ch.abertschi.sct.transformer;
 
 import ch.abertschi.sct.node.Node;
-import ch.abertschi.sct.node.NodeUtil;
+import ch.abertschi.sct.node.NodeUtils;
 import com.github.underscore.$;
 
 import java.util.LinkedList;
@@ -49,7 +49,7 @@ public class FieldReferenceTransformer implements Transformer
             {
                 String key = var.substring("request.".length());
                 System.out.println(key);
-                Node node = NodeUtil.findNode(key, context.getCall().getRequest().getPayloadNode());
+                Node node = NodeUtils.findNodeInTree(key, context.getCall().getRequest().getPayloadNode());
                 if (!$.isNull(node))
                 {
                     input = input.replace(var, node.getValue());
@@ -67,7 +67,7 @@ public class FieldReferenceTransformer implements Transformer
             {
                 String key = var.substring("response.".length());
                 System.out.println(key);
-                Node node = NodeUtil.findNode(key, context.getCall().getResponse().getPayloadNode());
+                Node node = NodeUtils.findNodeInTree(key, context.getCall().getResponse().getPayloadNode());
                 if (!$.isNull(node))
                 {
                     input = input.replace(var, node.getValue());

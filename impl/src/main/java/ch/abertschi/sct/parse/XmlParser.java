@@ -1,12 +1,16 @@
 package ch.abertschi.sct.parse;
 
 import ch.abertschi.sct.node.Node;
-import ch.abertschi.sct.node.NodeUtil;
+import ch.abertschi.sct.node.NodeUtils;
 import com.github.underscore.$;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.output.XMLOutputter;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -15,9 +19,22 @@ import java.util.List;
  */
 public class XmlParser
 {
-    public ParserContext parseXml(String xml)
+    public ParserContext parse(File file)
     {
-        Document document = NodeUtil.xmlToDocument(xml);
+        try
+        {
+            byte[] encoded = Files.readAllBytes(Paths.get(file.getAbsolutePath()));
+            return this.parse(new String(encoded));
+        }
+        catch (IOException e)
+        {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public ParserContext parse(String xml)
+    {
+        Document document = NodeUtils.xmlToDocument(xml);
         Element rootElement = document.getRootElement();
         List<ParserCall> storageCalls = new LinkedList<>();
 
@@ -45,7 +62,7 @@ public class XmlParser
 
         if (!$.isNull(payload))
         {
-            payloadNode = NodeUtil.parseDomToNode(payload);
+            payloadNode = NodeUtils.parseDomToNode(payload);
         }
         return new ParserRequest()
                 .setPayloadRaw(output.outputString(payload))
@@ -64,7 +81,7 @@ public class XmlParser
 
         if (!$.isNull(payload))
         {
-            payloadNode = NodeUtil.parseDomToNode(payload);
+            payloadNode = NodeUtils.parseDomToNode(payload);
         }
         String stacktraceValue = $.isNull(stacktrace) ? null : stacktrace.getText();
         String scriptValue = $.isNull(script) ? null : script.getText();

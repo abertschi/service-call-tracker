@@ -15,9 +15,9 @@ public class Node
 {
     private static final Pattern PATTERN_IS_REFERENCE = Pattern.compile("[#|\\{]([^}]*)}");
 
-    private String type;
     private String name;
     private String value;
+
     private boolean isContainer;
     private List<Node> children = new LinkedList<>();
 
@@ -79,7 +79,6 @@ public class Node
                 attributeBuilder.append(String.format(" %s=\"%s\"", entry.getKey(), entry.getValue()));
             }
         }
-
         StringBuilder childrenXml = new StringBuilder();
         if (!$.isEmpty(children))
         {
@@ -92,7 +91,6 @@ public class Node
         {
             childrenXml.append(this.value);
         }
-
         return String.format("<%s%s>%s</%s>", name, attributeBuilder.toString(), childrenXml.toString(), name);
     }
 
