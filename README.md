@@ -12,7 +12,7 @@ making your integration tests independent of 3rd-party calls.
 
 
 Method calls are marshaled to files of key-value pairs where the method signature acts as the key.
-A file functions as a storage for various method calls and is provided during runtime.
+A file functions as a parserContext for various method calls and is provided during runtime.
 
 
 # Getting started

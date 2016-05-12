@@ -29,7 +29,6 @@ public class VariableTransformer implements Transformer
     {
         this.factory = new ExpressionFactoryImpl();
         this.elContext = new SimpleContext();
-
         elContext.setVariable("env", factory.createValueExpression(System.getenv(), Map.class));
         elContext.setVariable("system", factory.createValueExpression(System.getProperties(), Properties.class));
         elContext.setVariable("regex", factory.createValueExpression(getRegex(), Map.class));
@@ -46,14 +45,13 @@ public class VariableTransformer implements Transformer
 
 
     @Override
-    public boolean canTransform(CallContext context, String input)
+    public boolean canTransform(TransformerContext context, String input)
     {
         return PATTERN_IS_EXPRESSION.matcher(input).find();
-
     }
 
     @Override
-    public String transform(CallContext context, String input)
+    public String transform(TransformerContext context, String input)
     {
         ValueExpression expression = factory.createValueExpression(elContext, input, String.class);
         String transformed;

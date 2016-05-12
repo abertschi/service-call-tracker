@@ -19,13 +19,13 @@ public class FieldReferenceTransformer implements Transformer
     private static final String FIELD_REFERENCE = "(%s([^ }]*)(?!\\} ))";
 
     @Override
-    public boolean canTransform(CallContext context, String input)
+    public boolean canTransform(TransformerContext context, String input)
     {
         return PATTERN_IS_EXPRESSION.matcher(input).find();
     }
 
     @Override
-    public String transform(CallContext context, String input)
+    public String transform(TransformerContext context, String input)
     {
         Matcher matcher;
         while ((matcher = PATTERN_IS_EXPRESSION.matcher(input)) != null && matcher.find())
@@ -41,7 +41,7 @@ public class FieldReferenceTransformer implements Transformer
     }
 
 
-    private String resolveRequestPayload(CallContext context, String input)
+    private String resolveRequestPayload(TransformerContext context, String input)
     {
         if (context.hasStorageCallRequest())
         {
@@ -49,7 +49,7 @@ public class FieldReferenceTransformer implements Transformer
             {
                 String key = var.substring("request.".length());
                 System.out.println(key);
-                Node node = NodeUtil.findNode(key, context.getStorageCall().getRequest().getPayloadNode());
+                Node node = NodeUtil.findNode(key, context.getCall().getRequest().getPayloadNode());
                 if (!$.isNull(node))
                 {
                     input = input.replace(var, node.getValue());
@@ -59,7 +59,7 @@ public class FieldReferenceTransformer implements Transformer
         return input;
     }
 
-    private String resolveResponsePayload(CallContext context, String input)
+    private String resolveResponsePayload(TransformerContext context, String input)
     {
         if (context.hasStorageCallResponse())
         {
@@ -67,17 +67,15 @@ public class FieldReferenceTransformer implements Transformer
             {
                 String key = var.substring("response.".length());
                 System.out.println(key);
-                Node node = NodeUtil.findNode(key, context.getStorageCall().getResponse().getPayloadNode());
+                Node node = NodeUtil.findNode(key, context.getCall().getResponse().getPayloadNode());
                 if (!$.isNull(node))
                 {
                     input = input.replace(var, node.getValue());
                 }
             }
         }
-
         return input;
     }
-
 
     private List<String> getProperties(String name, String input)
     {

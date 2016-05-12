@@ -5,7 +5,7 @@ package ch.abertschi.sct.transformer;
  */
 public interface Transformer
 {
-    boolean canTransform(CallContext context, String input);
+    boolean canTransform(TransformerContext context, String input);
 
-    String transform(CallContext context, String input);
+    String transform(TransformerContext context, String input);
 }

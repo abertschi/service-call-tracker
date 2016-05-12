@@ -9,7 +9,7 @@ import java.util.List;
  */
 public class Transformers
 {
-    public static void transform(Node node, List<Transformer> transformers, CallContext context)
+    public static void transform(Node node, List<Transformer> transformers, TransformerContext context)
     {
         if (node.isContainer())
         {
@@ -17,14 +17,13 @@ public class Transformers
         }
         else
         {
-            transformers
-                    .stream()
+            transformers.stream()
                     .filter(t -> t.canTransform(context, node.getValue()))
                     .forEach(t -> node.setValue(t.transform(context, node.getValue())));
         }
     }
 
-    public static String transform(String input, List<Transformer> transformers, CallContext context)
+    public static String transform(String input, List<Transformer> transformers, TransformerContext context)
     {
         for (Transformer transformer : transformers)
         {

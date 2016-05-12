@@ -1,8 +1,6 @@
 package ch.abertschi.sct.parse;
 
 import ch.abertschi.sct.node.NodeUtil;
-import ch.abertschi.sct.parse.ParserCall;
-import ch.abertschi.sct.parse.ParserCallResponse;
 import ch.abertschi.sct.transformer.*;
 import ch.abertschi.unserialize.StackTraceUnserialize;
 import com.github.underscore.$;
@@ -15,18 +13,18 @@ import java.util.List;
 /**
  * Created by abertschi on 11/05/16.
  */
-public class ResponseEvaluator
+public class ResponseExecutor
 {
+    private final Object currentRequest;
+    private final TransformerContext transformerContext;
+    private final ParserCall call;
     private List<Transformer> transformers;
 
-    private ParserCall call;
-
-    private CallContext context;
-
-    public ResponseEvaluator(CallContext context, ParserCall call)
+    public ResponseExecutor(TransformerContext context, ParserCall call, Object currentRequest)
     {
         this.call = call;
-        this.context = context;
+        this.transformerContext = context;
+        this.currentRequest = currentRequest;
         this.transformers = getResponseTransformers();
     }
 
@@ -53,16 +51,16 @@ public class ResponseEvaluator
         {
             throw new RuntimeException("Misconfigured call. Neither a script, nor stacktrace nor payload was set.");
         }
-
         return evaluated;
     }
 
     private Throwable createStackTrace()
     {
-        ParserCallResponse response = this.call.getResponse();
+        ParserResponse response = this.call.getResponse();
         Throwable exception = null;
         if (isStackTrace())
         {
+            TransformerContext context = new TransformerContext();
             String stacktrace = Transformers.transform(response.getStacktrace(), transformers, context);
             response.setStacktrace(stacktrace);
             exception = StackTraceUnserialize.unserialize(stacktrace);
@@ -73,10 +71,10 @@ public class ResponseEvaluator
     private Object createPayload()
     {
         Object payload = null;
-        ParserCallResponse response = this.call.getResponse();
+        ParserResponse response = call.getResponse();
         if (isPayload())
         {
-            Transformers.transform(response.getPayloadNode(), transformers, context);
+            Transformers.transform(response.getPayloadNode(), transformers, transformerContext);
             payload = NodeUtil.createObject(response.getPayloadType(), response.getPayloadNode());
         }
         return payload;
@@ -87,7 +85,7 @@ public class ResponseEvaluator
         Binding binding = new Binding();
         binding.setVariable("env", System.getenv());
         binding.setVariable("system", System.getProperties());
-        binding.setVariable("request", this.context.getRequestObject());
+        binding.setVariable("request", currentRequest);
         binding.setVariable("stacktrace", exception);
         binding.setVariable("response", payload);
         return new GroovyShell(binding);
@@ -103,19 +101,19 @@ public class ResponseEvaluator
 
     private boolean isScript()
     {
-        ParserCallResponse r = this.call.getResponse();
+        ParserResponse r = call.getResponse();
         return !$.isNull(r.getScript()) && !r.getScript().trim().isEmpty();
     }
 
     private boolean isStackTrace()
     {
-        ParserCallResponse r = this.call.getResponse();
+        ParserResponse r = call.getResponse();
         return !$.isNull(r.getStacktrace()) && !r.getStacktrace().trim().isEmpty();
     }
 
     private boolean isPayload()
     {
-        ParserCallResponse r = this.call.getResponse();
+        ParserResponse r = call.getResponse();
         return !$.isNull(r.getPayloadType())
                 && !r.getPayloadType().trim().isEmpty()
                 && !$.isNull(r.getPayloadNode());

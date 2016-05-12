@@ -5,7 +5,7 @@ import ch.abertschi.sct.node.Node;
 /**
  * Created by abertschi on 11/05/16.
  */
-public class ParserCallResponse
+public class ParserResponse
 {
     private String payloadRaw;
 
@@ -20,7 +20,7 @@ public class ParserCallResponse
         return payloadNode;
     }
 
-    public ParserCallResponse setPayloadNode(Node payloadNode)
+    public ParserResponse setPayloadNode(Node payloadNode)
     {
         this.payloadNode = payloadNode;
         return this;
@@ -31,7 +31,7 @@ public class ParserCallResponse
         return payloadRaw;
     }
 
-    public ParserCallResponse setPayloadRaw(String payloadRaw)
+    public ParserResponse setPayloadRaw(String payloadRaw)
     {
         this.payloadRaw = payloadRaw;
         return this;
@@ -42,7 +42,7 @@ public class ParserCallResponse
         return payloadType;
     }
 
-    public ParserCallResponse setPayloadType(String payloadType)
+    public ParserResponse setPayloadType(String payloadType)
     {
         this.payloadType = payloadType;
         return this;
@@ -53,7 +53,7 @@ public class ParserCallResponse
         return script;
     }
 
-    public ParserCallResponse setScript(String script)
+    public ParserResponse setScript(String script)
     {
         this.script = script;
         return this;
@@ -64,7 +64,7 @@ public class ParserCallResponse
         return stacktrace;
     }
 
-    public ParserCallResponse setStacktrace(String stacktrace)
+    public ParserResponse setStacktrace(String stacktrace)
     {
         this.stacktrace = stacktrace;
         return this;

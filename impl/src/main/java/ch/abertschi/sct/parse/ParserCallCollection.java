@@ -1,11 +1,9 @@
 package ch.abertschi.sct.parse;
 
-import ch.abertschi.sct.CallCollectable;
 import ch.abertschi.sct.node.Node;
 import ch.abertschi.sct.node.NodeUtil;
 import ch.abertschi.sct.transformer.*;
 import com.github.underscore.$;
-import org.jdom2.JDOMException;
 
 import java.io.File;
 import java.io.IOException;
@@ -17,67 +15,45 @@ import java.util.List;
 /**
  * Created by abertschi on 11/05/16.
  */
-public class ParserCallCollection implements CallCollectable
+// TODO: better name?
+public class ParserCallCollection
 {
-    private ParserContext storage;
+    private ParserContext parserContext;
 
     private List<Transformer> requestTransformers;
 
-    public ParserCallCollection() throws IOException, JDOMException
+    public ParserCallCollection(File source)
     {
-        String path = new File(new File("."), "impl/src/main/java/ch/abertschi/sct/storage.xml").getAbsolutePath();
-        byte[] encoded = Files.readAllBytes(Paths.get(path));
-        String xml = new String(encoded);
-
-        DataSetParser parser = new DataSetParser();
-        this.storage = parser.parseXml(xml);
+        XmlParser parser = new XmlParser();
+        this.parserContext = parser.parseXml(readFile(source));
         this.requestTransformers = getRequestTransformers();
     }
 
-    public static void main(String[] args) throws Throwable
-    {
-        String hello = "hi";
-        new ParserCallCollection().get(hello);
-
-    }
-
-    @Override
     public Object get(Object request) throws Throwable
     {
         Object response = null;
-        CallContext context = new CallContext();
-        context.setRequestObject(request);
-
-        ParserCall call = findMatchingCall(context);
+        ParserCall call = findCall(request);
         if (!$.isNull(call))
         {
-            context.setStorageCall(call);
-            ResponseEvaluator eval = new ResponseEvaluator(context, call);
+            ResponseExecutor eval = new ResponseExecutor(context, call);
             response = eval.evaluate();
         }
-
         return response;
     }
 
-    @Override
-    public void put(Object request, Object response)
-    {
-
-    }
-
-
-    protected ParserCall findMatchingCall(CallContext context)
+    protected ParserCall findCall(Object currentRequest)
     {
         ParserCall found = null;
-
-        for (ParserCall call : this.storage.getCalls())
+        TransformerContext context = new TransformerContext().setCurrentRequest(currentRequest);
+        for (ParserCall call : this.parserContext.getCalls())
         {
-            context.setStorageCall(call); // TODO: not thread save, improve
-            ParserCallRequest request = call.getRequest();
-            Node node = request.getPayloadNode();
+            // go sequentially through calls to match calls with lower index first
+            context.setCall(call);
+            Node node = call.getRequest().getPayloadNode();
             Transformers.transform(node, this.requestTransformers, context);
 
-            if (NodeUtil.doesNodeMatchWithObject(request.getPayloadType(), node, context.getRequestObject()))
+            if (NodeUtil.doesNodeMatchWithObject(call.getRequest().getPayloadType(),
+                    node, context.getCurrentRequest()))
             {
                 found = call;
                 break;
@@ -86,12 +62,31 @@ public class ParserCallCollection implements CallCollectable
         return found;
     }
 
-
     protected List<Transformer> getRequestTransformers()
     {
         List<Transformer> transformers = new ArrayList<>();
         transformers.add(new VariableTransformer());
         transformers.add(new FieldReferenceTransformer());
         return transformers;
+    }
+
+    private String readFile(File source)
+    {
+        try
+        {
+            byte[] encoded = Files.readAllBytes(Paths.get(source.getAbsolutePath()));
+            return new String(encoded);
+        }
+        catch (IOException e)
+        {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static void main(String[] args) throws Throwable
+    {
+        String hello = "hi";
+        File file = new File(new File("."), "impl/src/main/java/ch/abertschi/sct/parserContext.xml");
+        new ParserCallCollection(file).get(hello);
     }
 }

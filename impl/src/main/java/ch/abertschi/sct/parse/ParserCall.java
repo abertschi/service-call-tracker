@@ -5,27 +5,27 @@ package ch.abertschi.sct.parse;
  */
 public class ParserCall
 {
-    private ParserCallRequest request = new ParserCallRequest();
+    private ParserRequest request = new ParserRequest();
 
-    private ParserCallResponse response = new ParserCallResponse();
+    private ParserResponse response = new ParserResponse();
 
-    public ParserCallRequest getRequest()
+    public ParserRequest getRequest()
     {
         return request;
     }
 
-    public ParserCall setRequest(ParserCallRequest request)
+    public ParserCall setRequest(ParserRequest request)
     {
         this.request = request;
         return this;
     }
 
-    public ParserCallResponse getResponse()
+    public ParserResponse getResponse()
     {
         return response;
     }
 
-    public ParserCall setResponse(ParserCallResponse response)
+    public ParserCall setResponse(ParserResponse response)
     {
         this.response = response;
         return this;
