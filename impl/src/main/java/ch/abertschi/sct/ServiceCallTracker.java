@@ -2,65 +2,79 @@ package ch.abertschi.sct;
 
 import ch.abertschi.sct.invocation.Interceptor;
 import ch.abertschi.sct.invocation.InvocationContext;
-import ch.abertschi.sct.util.ResultNotFoundExcetion;
+import ch.abertschi.sct.parse.StorageParser;
+import ch.abertschi.sct.serial.Call;
+import ch.abertschi.sct.serial.Request;
+import ch.abertschi.sct.serial.Response;
+import ch.abertschi.sct.serial.StorageWriter;
+import ch.abertschi.sct.util.ResultNotFoundException;
 import ch.abertschi.sct.util.SctException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ch.abertschi.sct.api.SctConfiguration;
 
+import java.io.File;
+import java.net.URISyntaxException;
+import java.net.URL;
+
 public class ServiceCallTracker implements Interceptor
 {
     private static final Logger LOG = LoggerFactory.getLogger(ServiceCallTracker.class);
 
-    private SctContext context;
+    private SctConfiguration config;
 
     public ServiceCallTracker(SctConfiguration config)
     {
-        this.context = createContext(config);
-    }
-
-    private SctContext createContext(SctConfiguration c)
-    {
-        SctContext context = new SctContext();
-        context.setConfiguration(c);
-        return context;
+        this.config = config;
     }
 
     @Override
     public Object invoke(InvocationContext ctx)
     {
         final Object request = getInCorrectDimension(ctx.getParameters());
-        final SctConfiguration config = context.getConfiguration();
         Object response = null;
 
         if (config.isResponseLoading() && config.isCallRecording())
         {
-            try
+            File responses = getFile(config.getResponseLoadingUrl());
+            File recordings = getFile(config.getResponseLoadingUrl());
+            if (responses.exists())
             {
-                response = loadResponse(request);
+                try
+                {
+                    response = loadResponse(responses, request);
+                }
+                catch (ResultNotFoundException e)
+                {
+                    response = proceed(ctx);
+                    recordCall(recordings, request, response);
+                }
             }
-            catch (ResultNotFoundExcetion e)
-            { // TODO
+            else
+            {
                 response = proceed(ctx);
-                recordCall(request, response);
+                recordCall(recordings, request, response);
             }
         }
         else if (config.isResponseLoading())
         {
+            File responses = getFile(config.getResponseLoadingUrl());
             try
             {
-                response = loadResponse(request);
+                response = loadResponse(responses, request);
             }
-            catch (ResultNotFoundExcetion e)
+            catch (ResultNotFoundException e)
             {
-                throw new SctException(e);
+                String msg = "Service Call Tracker: No response was found for given request";
+                throw new RuntimeException(msg, e);
             }
         }
         else if (config.isCallRecording())
         {
+            File recordings = getFile(config.getCallRecordingUrl());
             response = proceed(ctx);
-            recordCall(request, response);
+            recordCall(recordings, request, response);
         }
         else
         {
@@ -69,13 +83,18 @@ public class ServiceCallTracker implements Interceptor
         return response;
     }
 
-    private Object loadResponse(Object request) throws ResultNotFoundExcetion
+    private Object loadResponse(File responses, Object request)
     {
-        return null;
+        return new StorageParser(responses).get(request);
     }
 
-    private void recordCall(Object request, Object response)
+    private void recordCall(File recordings, Object request, Object response)
     {
+        Call call = new Call()
+                .setRequest(new Request().setPayload(request))
+                .setResponse(new Response().setPayload(response));
+
+        new StorageWriter(recordings).append(call);
     }
 
     private Object proceed(InvocationContext ctx)
@@ -108,6 +127,20 @@ public class ServiceCallTracker implements Interceptor
             {
                 result = parameters[0];
             }
+        }
+        return result;
+    }
+
+    private File getFile(URL url)
+    {
+        File result;
+        try
+        {
+            result = new File(url.toURI());
+        }
+        catch (URISyntaxException e)
+        {
+            throw new RuntimeException(e);
         }
         return result;
     }

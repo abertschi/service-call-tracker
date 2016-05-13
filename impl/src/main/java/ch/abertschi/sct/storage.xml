@@ -1,10 +1,8 @@
-<parserContext>
+<storage>
     <calls>
-
         <call>
             <request>
-                <payload
-                        class="java.lang.String">${regex.any}</payload>
+                <payload class="java.lang.String">${regex.any}</payload>
             </request>
             <response>
                 <stacktrace>
@@ -37,7 +35,7 @@
                   //Exception e = new RuntimeException("exception from appl " + request.wv__header.client__id);
 
                   // access stacktrace as instance of type throwable
-                  throw stacktrace
+                  throw new Exception("hi");
 
                   // modify response with script
                   List<String> list = new ArrayList<>();
@@ -57,4 +55,4 @@
             </response>
         </call>
     </calls>
-</parserContext>
+</storage>

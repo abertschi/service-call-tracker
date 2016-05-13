@@ -3,6 +3,8 @@ package ch.abertschi.sct.parse;
 import ch.abertschi.sct.node.Node;
 import ch.abertschi.sct.node.NodeUtils;
 import ch.abertschi.sct.transformer.*;
+import ch.abertschi.sct.util.ExceptionUtil;
+import ch.abertschi.sct.util.ResultNotFoundException;
 import ch.abertschi.unserialize.StackTraceUnserialize;
 import com.github.underscore.$;
 import groovy.lang.Binding;
@@ -28,7 +30,10 @@ public class StorageParser
         this.responseTransformers = getResponseTransformers();
     }
 
-    public Object get(Object request) throws Throwable
+    /**
+     * Throws ResultNotFoundException if no matching response was found.
+     */
+    public Object get(Object request)
     {
         Object response = null;
         ParserCall call = findCall(request);
@@ -38,11 +43,14 @@ public class StorageParser
             {
                 response = executeResponse(call, request);
             }
-            catch (Throwable th)
+            catch (Throwable throwable)
             {
-                // response eventually throws exception on purpose
-                throw th;
+                ExceptionUtil.throwException(throwable);
             }
+        }
+        else
+        {
+            throw new ResultNotFoundException();
         }
         return response;
     }
@@ -58,8 +66,7 @@ public class StorageParser
             Node node = call.getRequest().getPayloadNode();
             Transformers.transform(node, this.requestTransformers, context);
 
-            if (NodeUtils.doesNodeMatchWithObject(call.getRequest().getPayloadType(),
-                    node, context.getCurrentRequest()))
+            if (NodeUtils.doesNodeMatchWithObject(node, context.getCurrentRequest()))
             {
                 found = call;
                 break;
@@ -135,7 +142,7 @@ public class StorageParser
         if (isPayload(call))
         {
             Transformers.transform(response.getPayloadNode(), this.responseTransformers, transformerContext);
-            payload = NodeUtils.createObjectWithNode(response.getPayloadType(), response.getPayloadNode());
+            payload = NodeUtils.createObjectWithNode(response.getPayloadNode());
         }
         return payload;
     }
@@ -166,15 +173,13 @@ public class StorageParser
     private boolean isPayload(ParserCall call)
     {
         ParserResponse r = call.getResponse();
-        return !$.isNull(r.getPayloadType())
-                && !r.getPayloadType().trim().isEmpty()
-                && !$.isNull(r.getPayloadNode());
+        return !$.isNull(r.getPayloadNode());
     }
 
     public static void main(String[] args) throws Throwable
     {
         String hello = "hi";
-        File file = new File(new File("."), "impl/src/main/java/ch/abertschi/sct/parserContext.xml");
+        File file = new File(new File("."), "impl/src/main/java/ch/abertschi/sct/storage.xml");
         new StorageParser(file).get(hello);
     }
 }

@@ -13,6 +13,17 @@ import java.util.List;
 @XStreamAlias("storage")
 public class Storage
 {
+    public List<Call> getCalls()
+    {
+        return calls;
+    }
+
+    public Storage setCalls(List<Call> calls)
+    {
+        this.calls = calls;
+        return this;
+    }
+
     private List<Call> calls = new ArrayList<>();
 
     public Storage()

@@ -33,15 +33,10 @@ public class NodeUtils
         return XSTREAM.toXML(object);
     }
 
-    public static boolean doesNodeMatchWithObject(String type, Node node, Object object)
+    public static boolean doesNodeMatchWithObject(Node node, Object object)
     {
-        boolean success = false;
-        if (type.equals(object.getClass().getCanonicalName()))
-        {
-            Node otherNode = createNodeFromObject(object);
-            success = node.doesMatchWith(otherNode);
-        }
-        return success;
+        Node otherNode = createNodeFromObject(object);
+        return node.doesMatchWith(otherNode);
     }
 
     public static Node parseDomToNode(Element element)
@@ -76,11 +71,9 @@ public class NodeUtils
         return node;
     }
 
-    public static Object createObjectWithNode(String type, Node node)
+    public static Object createObjectWithNode(Node node)
     {
-        HashMap<String, String> attributes = new HashMap<>();
-        attributes.put("class", type);
-        String xml = node.toXml(attributes);
+        String xml = node.toXml();
         return XSTREAM.fromXML(xml);
     }
 

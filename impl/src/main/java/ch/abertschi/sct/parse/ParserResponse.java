@@ -8,12 +8,9 @@ import ch.abertschi.sct.node.Node;
 public class ParserResponse
 {
     private String payloadRaw;
-
     private Node payloadNode;
-
-    private String payloadType;
-
     private String script;
+    private String stacktrace;
 
     public Node getPayloadNode()
     {
@@ -34,17 +31,6 @@ public class ParserResponse
     public ParserResponse setPayloadRaw(String payloadRaw)
     {
         this.payloadRaw = payloadRaw;
-        return this;
-    }
-
-    public String getPayloadType()
-    {
-        return payloadType;
-    }
-
-    public ParserResponse setPayloadType(String payloadType)
-    {
-        this.payloadType = payloadType;
         return this;
     }
 
@@ -69,7 +55,4 @@ public class ParserResponse
         this.stacktrace = stacktrace;
         return this;
     }
-
-    private String stacktrace;
-
 }

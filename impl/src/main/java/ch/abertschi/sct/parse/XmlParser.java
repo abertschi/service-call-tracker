@@ -38,16 +38,16 @@ public class XmlParser
         Element rootElement = document.getRootElement();
         List<ParserCall> storageCalls = new LinkedList<>();
 
-        rootElement.getChild("calls")
-                .getChildren("call")
-                .forEach(callElement -> {
-                    ParserCall call = new ParserCall()
+        Element calls = rootElement.getChild("calls");
+        if (!$.isNull(calls))
+        {
+            calls.getChildren("call")
+                    .stream()
+                    .map(callElement -> new ParserCall()
                             .setRequest(parseRequest(callElement))
-                            .setResponse(parseResponse(callElement));
-
-                    storageCalls.add(call);
-                });
-
+                            .setResponse(parseResponse(callElement)))
+                    .forEach(call -> storageCalls.add(call));
+        }
         ParserContext context = new ParserContext();
         context.setCalls(storageCalls);
         return context;
@@ -87,6 +87,7 @@ public class XmlParser
         }
         String stacktraceValue = $.isNull(stacktrace) ? null : stacktrace.getText();
         String scriptValue = $.isNull(script) ? null : script.getText();
+
         return new ParserResponse()
                 .setPayloadRaw(output.outputString(payload))
                 .setScript(scriptValue)
