@@ -5,13 +5,19 @@ import com.thoughtworks.xstream.annotations.XStreamAlias;
 @XStreamAlias("call")
 public class Call
 {
+    @XStreamAlias("class")
+    private String targetClass;
+
+    @XStreamAlias("method")
+    private String targetMethod;
+
     private Request request;
 
     public Request getRequest()
     {
         return request;
     }
-
+    
     public Call setRequest(Request request)
     {
         this.request = request;
