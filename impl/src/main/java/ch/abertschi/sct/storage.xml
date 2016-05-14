@@ -1,6 +1,8 @@
 <storage>
     <calls>
         <call>
+            <class></class>
+            <method>getCall</method>
             <request>
                 <payload class="java.lang.String">${regex.any}</payload>
             </request>

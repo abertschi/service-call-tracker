@@ -11,5 +11,7 @@ public interface SctConfiguration {
 	URL getCallRecordingUrl();
 
 	URL getResponseLoadingUrl();
+
+
 }
 	
