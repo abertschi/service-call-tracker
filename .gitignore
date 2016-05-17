@@ -21,3 +21,6 @@ pom.xml.versionsBackup
 .idea
 *.iml
 README.old.md
+recordings/ch.abertschi.sct.domain.customerservice.getcustomer.xml
+recording.xml
+ch.abertschi.sct.domain.customerservice.getcustomer.xml
