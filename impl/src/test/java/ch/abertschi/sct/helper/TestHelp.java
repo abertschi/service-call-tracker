@@ -7,14 +7,14 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Scanner;
 
-import ch.abertschi.sct.xstream.XStreamProvider;
+import ch.abertschi.sct.serial.XStreamProvider;
 import com.thoughtworks.xstream.XStream;
 
 public class TestHelp {
 
     private static final String TEST_RES = "src/test/resources/";
 
-    private static XStream xstream = XStreamProvider.INSTANCE.createPlainXStream();
+    private static XStream xstream = XStreamProvider.createXStream();
 
     private TestHelp() {
         throw new UnsupportedOperationException("Not allowed to instancation helper class.");

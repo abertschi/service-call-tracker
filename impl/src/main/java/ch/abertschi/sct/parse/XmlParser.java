@@ -34,22 +34,30 @@ public class XmlParser
 
     public ParserContext parse(String xml)
     {
-        Document document = NodeUtils.xmlToDocument(xml);
-        Element rootElement = document.getRootElement();
-        List<ParserCall> storageCalls = new LinkedList<>();
-
-        Element calls = rootElement.getChild("calls");
-        if (!$.isNull(calls))
-        {
-            calls.getChildren("call")
-                    .stream()
-                    .map(callElement -> new ParserCall()
-                            .setRequest(parseRequest(callElement))
-                            .setResponse(parseResponse(callElement)))
-                    .forEach(call -> storageCalls.add(call));
-        }
         ParserContext context = new ParserContext();
-        context.setCalls(storageCalls);
+        if ($.isNull(xml))
+        {
+            throw new IllegalArgumentException("Xml cant be null");
+        }
+        else if (!xml.trim().isEmpty())
+        {
+            Document document = NodeUtils.xmlToDocument(xml);
+            Element rootElement = document.getRootElement();
+            List<ParserCall> storageCalls = new LinkedList<>();
+
+            Element calls = rootElement.getChild("calls");
+            if (!$.isNull(calls))
+            {
+                calls.getChildren("call")
+                        .stream()
+                        .map(callElement -> new ParserCall()
+                                .setRequest(parseRequest(callElement))
+                                .setResponse(parseResponse(callElement)))
+                        .forEach(call -> storageCalls.add(call));
+            }
+
+            context.setCalls(storageCalls);
+        }
         return context;
     }
 

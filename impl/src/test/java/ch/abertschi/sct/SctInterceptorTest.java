@@ -1,5 +1,6 @@
 package ch.abertschi.sct;
 
+import ch.abertschi.sct.api.Configuration;
 import junit.framework.Assert;
 import org.junit.Test;
 import ch.abertschi.sct.api.SctConfigurator;
@@ -22,23 +23,25 @@ public class SctInterceptorTest
         // given: Using Java's dynamic Proxy API to proxy CustomerServiceImpl
         CustomerService service = getProxiedCustomerService();
 
-        SctConfigurationImpl config = new SctConfigurationImpl();
-        SctConfigurator.getInstance().setConfiguration(config);
-        config.setCallRecording(true);
-        config.setCallRecordingUrl(File.createTempFile("recording", "xml").toURI().toURL());
+        Configuration config = new Configuration();
+        SctConfigurator.getInstance().setGlobalConfiguration(config);
+        config.setRecordingEnabled(true);
+        config.setRecordingSource(File.createTempFile("recording", "xml"));
+
 
         //when
-        Customer parker = service.getCustomer("Parker");
-        Customer spiderman = service.getCustomer("Spiderman");
-        Customer venom = service.getCustomer("Venom");
+        Customer parker = service.getCustomer("Parker", "key2");
+        Customer spiderman = service.getCustomer("Spiderman", "");
+        Customer venom = service.getCustomer("Venom", "key2");
 
         // then
-        String is = TestHelp.readFile(config.getCallRecordingUrl());
+        String is = TestHelp.readFile(config.getRecordingSource().toURL());
         Assert.assertTrue(is.contains("Faked response"));
 
         Assert.assertEquals(parker.getComment(), "Parker");
         Assert.assertEquals(spiderman.getComment(), "Spiderman");
         Assert.assertEquals(venom.getComment(), "Venom");
+        System.out.println(is);
 
 
     }
@@ -48,7 +51,7 @@ public class SctInterceptorTest
         InvocationHandler handler = new ReflectionInvocationHandler(new CustomerService()
         {
             @Override
-            public Customer getCustomer(String key)
+            public Customer getCustomer(String key, String key2)
             {
                 Customer c = new Customer("Faked response", 1980);
                 c.setComment(key);

@@ -1,5 +1,6 @@
 package ch.abertschi.sct.parse;
 
+import ch.abertschi.sct.api.Configuration;
 import ch.abertschi.sct.node.Node;
 import ch.abertschi.sct.node.NodeUtils;
 import ch.abertschi.sct.transformer.*;
@@ -11,6 +12,7 @@ import groovy.lang.Binding;
 import groovy.lang.GroovyShell;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,13 +24,22 @@ public class StorageParser
     private List<Transformer> responseTransformers;
     private List<Transformer> requestTransformers;
     private ParserContext parserContext;
+    private Configuration sctConfig;
 
-    public StorageParser(File source)
+    public StorageParser(File source) // , ConfigurationFactory sctConfig
     {
+        //this.sctConfig = sctConfig;
+        createFileIfNotExists(source);
         this.parserContext = new XmlParser().parse(source);
         this.requestTransformers = getRequestTransformers();
         this.responseTransformers = getResponseTransformers();
     }
+
+    public ParserContext getParserContext()
+    {
+        return this.parserContext;
+    }
+
 
     /**
      * Throws ResultNotFoundException if no matching response was found.
@@ -180,6 +191,22 @@ public class StorageParser
     {
         String hello = "hi";
         File file = new File(new File("."), "impl/src/main/java/ch/abertschi/sct/storage.xml");
-        new StorageParser(file).get(hello);
+        //new StorageParser(file).get(hello);
+    }
+
+    private void createFileIfNotExists(File file)
+    {
+        if (!file.exists())
+        {
+            file.getParentFile().mkdirs();
+            try
+            {
+                file.createNewFile();
+            }
+            catch (IOException e)
+            {
+                throw new RuntimeException(e);
+            }
+        }
     }
 }

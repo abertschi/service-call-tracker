@@ -21,7 +21,7 @@ public class ReflectionInvocationHandler implements InvocationHandler
         DefaultInvocationContext invocation = new DefaultInvocationContext(mTarget, method, args);
         invocation.setProxy(proxy);
 
-        SctInterceptor interceptor = new SctInterceptor(SctConfigurator.getInstance().getConfiguration());
+        ServiceCallTracker interceptor = new ServiceCallTracker(SctConfigurator.getInstance().getConfiguration());
         return interceptor.invoke(invocation);
     }
 }

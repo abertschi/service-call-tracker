@@ -22,24 +22,46 @@ public class StorageWriter
 
     private static final XStream XSTREAM = XStreamProvider.createXStream();
 
+    private ParserContext parserContext;
+
     public StorageWriter(File target)
     {
         this.target = target;
     }
 
-    public void append(Call call)
+    public void dump(Call call)
+    {
+        FileOutputStream out = null;
+        try
+        {
+            createFileIfNotExists(this.target);
+            out = new FileOutputStream(this.target, true);
+        }
+        catch (FileNotFoundException e)
+        {
+            throw new RuntimeException(e);
+        }
+        System.out.println("hi");
+        System.out.println(XSTREAM.toXML(call));
+        XSTREAM.marshal(call, new PrettyPrintWriter(new OutputStreamWriter(out)));
+    }
+
+    public void write(Call call)
     {
         List<Call> calls = new ArrayList<>();
         calls.add(call);
-        append(calls);
+        write(calls);
     }
 
-    public void append(List<Call> calls)
+    public void write(List<Call> calls)
     {
         ParserContext context = getParserContext();
-        context.getCalls().stream()
-                .map(call -> ParserCall.createWithRawObjects(call.getRequest(), call.getResponse()))
+        calls.stream()
+                .map(call -> ParserCall.createWithRawObjects(call.getRequest().getPayload(), call.getResponse().getPayload()))
                 .forEach(call -> context.getCalls().add(call));
+
+        System.out.println(XSTREAM.toXML(context));
+
         persist(toStorage(context));
     }
 
@@ -66,17 +88,21 @@ public class StorageWriter
 
     private ParserContext getParserContext()
     {
-        ParserContext context;
-        if (!target.exists())
+        if (this.parserContext == null)
         {
-            context = new ParserContext();
+            ParserContext context;
+            if (!target.exists())
+            {
+                context = new ParserContext();
+            }
+            else
+            {
+                XmlParser parser = new XmlParser();
+                context = parser.parse(target);
+            }
+            this.parserContext = context;
         }
-        else
-        {
-            XmlParser parser = new XmlParser();
-            context = parser.parse(target);
-        }
-        return context;
+        return this.parserContext;
     }
 
     private void persist(Storage storage)
@@ -112,7 +138,7 @@ public class StorageWriter
 
     private String toCdata(String input)
     {
-        if (!$.isNull(input) && !input.trim().startsWith("<![CDATA]"))
+        if (!$.isNull(input) && !input.trim().isEmpty() && !input.trim().startsWith("<![CDATA]"))
         {
             StringBuilder builder = new StringBuilder();
             builder.append("<![CDATA[");

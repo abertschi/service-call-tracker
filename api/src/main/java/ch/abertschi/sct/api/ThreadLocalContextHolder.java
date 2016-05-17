@@ -10,7 +10,9 @@ public class ThreadLocalContextHolder
 {
     private static final ThreadLocal<Map<String, Object>> CONTEXT = new ThreadLocal<>();
 
-    private ThreadLocalContextHolder(){}
+    private ThreadLocalContextHolder()
+    {
+    }
 
     public static void put(String key, Object payload)
     {
@@ -26,7 +28,7 @@ public class ThreadLocalContextHolder
     public static Object get(String key)
     {
 
-        return CONTEXT.get().get(key);
+        return CONTEXT.get() != null ? CONTEXT.get().get(key) : null;
     }
 
     public static void cleanupThread()

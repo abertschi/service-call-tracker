@@ -6,7 +6,7 @@ public class SctConfigurator
 
     private static final String THREAD_LOCAL_CONFIG = "thread_local_config";
 
-    private SctConfiguration globalConfig;
+    private Configuration globalConfig;
 
     private SctConfigurator()
     {
@@ -17,33 +17,33 @@ public class SctConfigurator
         return INSTANCE;
     }
 
-    public SctConfiguration getConfiguration()
+    public Configuration getConfiguration()
     {
-        SctConfiguration threadLocal = getThreadLocalConfiguration();
+        Configuration threadLocal = getThreadLocalConfiguration();
         return threadLocal == null ? getGlobalConfiguration() : threadLocal;
     }
 
-    public SctConfigurator setGlobalConfiguration(SctConfiguration config)
+    public SctConfigurator setGlobalConfiguration(Configuration config)
     {
         this.globalConfig = config;
         return this;
     }
 
-    public SctConfiguration getGlobalConfiguration()
+    public Configuration getGlobalConfiguration()
     {
         return this.globalConfig;
     }
 
-    public SctConfigurator setThreadLocalConfiguration(SctConfiguration config)
+    public SctConfigurator setThreadLocalConfiguration(Configuration config)
     {
         ThreadLocalContextHolder.put(THREAD_LOCAL_CONFIG, config);
         return this;
     }
 
-    public SctConfiguration getThreadLocalConfiguration()
+    public Configuration getThreadLocalConfiguration()
     {
         Object o = ThreadLocalContextHolder.get(THREAD_LOCAL_CONFIG);
-        return o == null ? null : (SctConfiguration) o;
+        return o == null ? null : (Configuration) o;
     }
 
 }
