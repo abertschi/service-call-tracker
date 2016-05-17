@@ -40,7 +40,6 @@ public class Configuration
     public Object build()
     {
         return null;
-
     }
 
     public static Configuration createConfiguration()

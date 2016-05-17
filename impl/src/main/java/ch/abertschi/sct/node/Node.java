@@ -14,8 +14,6 @@ import java.util.regex.PatternSyntaxException;
  */
 public class Node
 {
-    private static final Pattern PATTERN_IS_REFERENCE = Pattern.compile("[#|\\{]([^}]*)}");
-
     private String name;
     private String value;
     private String classType;
@@ -29,22 +27,17 @@ public class Node
 
     public boolean doesMatchWith(Node other)
     {
-        System.out.println(this.getName() + " " + other.getName());
         boolean success = false;
-
-        if (this.name.equals(other.name) || true)
+        if (this.name.equals(other.name) || true) // TODO: outer names are not compatible
         {
-            System.out.println("name same");
             if (this.isContainer && other.isContainer)
             {
-                System.out.println("is container same");
                 for (Node child : children)
                 {
                     for (Node otherChild : other.getChildren())
                     {
                         if (child.doesMatchWith(otherChild))
                         {
-                            System.out.println("value same");
                             success = true;
                             break;
                         }
@@ -59,7 +52,6 @@ public class Node
             else
             {
                 // compare values
-                System.out.println(other.getValue() + " " + this.value);
                 success = !$.isNull(other.getValue()) && other.getValue().matches(this.value);
             }
         }
@@ -155,20 +147,5 @@ public class Node
     {
         this.classType = classType;
         return this;
-    }
-
-    private boolean isRegex(String input)
-    {
-        boolean isRegex;
-        try
-        {
-            Pattern.compile(input);
-            isRegex = true;
-        }
-        catch (PatternSyntaxException e)
-        {
-            isRegex = false;
-        }
-        return isRegex;
     }
 }

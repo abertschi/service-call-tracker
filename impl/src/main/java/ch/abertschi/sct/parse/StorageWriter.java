@@ -1,14 +1,12 @@
-package ch.abertschi.sct.serial;
+package ch.abertschi.sct.parse;
 
-import ch.abertschi.sct.node.Node;
 import ch.abertschi.sct.node.NodeUtils;
-import ch.abertschi.sct.parse.*;
-import com.github.underscore.$;
+import ch.abertschi.sct.serial.*;
 import com.thoughtworks.xstream.XStream;
-import com.thoughtworks.xstream.io.xml.PrettyPrintWriter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.*;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -18,6 +16,8 @@ import java.util.stream.Collectors;
  */
 public class StorageWriter
 {
+    private static final Logger LOG = LoggerFactory.getLogger(StorageWriter.class);
+
     private File target;
 
     private static final XStream XSTREAM = XStreamProvider.createXStream();
@@ -31,7 +31,7 @@ public class StorageWriter
 
     public void dump(Call call)
     {
-        FileOutputStream out = null;
+        FileOutputStream out;
         try
         {
             createFileIfNotExists(this.target);
@@ -41,9 +41,8 @@ public class StorageWriter
         {
             throw new RuntimeException(e);
         }
-        System.out.println("hi");
-        System.out.println(XSTREAM.toXML(call));
-        XSTREAM.marshal(call, new PrettyPrintWriter(new OutputStreamWriter(out)));
+        XSTREAM.marshal(call, new XStreamProvider.MyPrettyWriter(new OutputStreamWriter(out)));
+        logAsXml(call);
     }
 
     public void write(Call call)
@@ -59,9 +58,6 @@ public class StorageWriter
         calls.stream()
                 .map(call -> ParserCall.createWithRawObjects(call.getRequest().getPayload(), call.getResponse().getPayload()))
                 .forEach(call -> context.getCalls().add(call));
-
-        System.out.println(XSTREAM.toXML(context));
-
         persist(toStorage(context));
     }
 
@@ -79,8 +75,8 @@ public class StorageWriter
                 .setPayload(NodeUtils.createObjectWithNode(parserCall.getRequest().getPayloadNode()));
         Response res = new Response()
                 .setPayload(NodeUtils.createObjectWithNode(parserCall.getResponse().getPayloadNode()))
-                .setScript(toCdata(parserCall.getResponse().getScript()))
-                .setStacktrace(toCdata(parserCall.getResponse().getStacktrace()));
+                .setScript(parserCall.getResponse().getScript())
+                .setStacktrace(parserCall.getResponse().getStacktrace());
         return new Call()
                 .setRequest(req)
                 .setResponse(res);
@@ -117,7 +113,9 @@ public class StorageWriter
         {
             throw new RuntimeException(e);
         }
-        XSTREAM.marshal(storage, new PrettyPrintWriter(new OutputStreamWriter(out)));
+
+        XSTREAM.marshal(storage, new XStreamProvider.MyPrettyWriter(new OutputStreamWriter(out)));
+        logAsXml(storage);
     }
 
     private void createFileIfNotExists(File file)
@@ -136,19 +134,11 @@ public class StorageWriter
         }
     }
 
-    private String toCdata(String input)
+    private void logAsXml(Object toLog)
     {
-        if (!$.isNull(input) && !input.trim().isEmpty() && !input.trim().startsWith("<![CDATA]"))
+        if (LOG.isDebugEnabled())
         {
-            StringBuilder builder = new StringBuilder();
-            builder.append("<![CDATA[");
-            builder.append(input);
-            builder.append("]]>");
-            return builder.toString();
-        }
-        else
-        {
-            return input;
+            LOG.debug(XSTREAM.toXML(toLog));
         }
     }
 }

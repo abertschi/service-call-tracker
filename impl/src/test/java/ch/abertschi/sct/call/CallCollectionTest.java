@@ -2,7 +2,7 @@
 //
 //import ch.abertschi.sct.newp.serial.Call;
 //import ch.abertschi.sct.newp.serial.CallCollection;
-//import ch.abertschi.sct.serial.XStreamProvider;
+//import ch.abertschi.sct.parse.XStreamProvider;
 //import org.junit.Assert;
 //
 //import ch.abertschi.sct.helper.TestHelp;

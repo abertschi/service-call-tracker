@@ -1,15 +1,11 @@
 package ch.abertschi.sct.parse;
 
-import ch.abertschi.sct.api.Configuration;
 import ch.abertschi.sct.node.Node;
 import ch.abertschi.sct.node.NodeUtils;
 import ch.abertschi.sct.transformer.*;
 import ch.abertschi.sct.util.ExceptionUtil;
 import ch.abertschi.sct.util.ResultNotFoundException;
-import ch.abertschi.unserialize.StackTraceUnserialize;
 import com.github.underscore.$;
-import groovy.lang.Binding;
-import groovy.lang.GroovyShell;
 
 import java.io.File;
 import java.io.IOException;
@@ -21,25 +17,17 @@ import java.util.List;
  */
 public class StorageParser
 {
-    private List<Transformer> responseTransformers;
-    private List<Transformer> requestTransformers;
     private ParserContext parserContext;
-    private Configuration sctConfig;
+    private List<Transformer> requestAndResponseTransformers;
+    private ResponseExecutor responseExecutor;
 
-    public StorageParser(File source) // , ConfigurationFactory sctConfig
+    public StorageParser(File source)
     {
-        //this.sctConfig = sctConfig;
         createFileIfNotExists(source);
         this.parserContext = new XmlParser().parse(source);
-        this.requestTransformers = getRequestTransformers();
-        this.responseTransformers = getResponseTransformers();
+        this.requestAndResponseTransformers = getRequestAndResponseTransformers();
+        this.responseExecutor = new ResponseExecutor(parserContext, requestAndResponseTransformers);
     }
-
-    public ParserContext getParserContext()
-    {
-        return this.parserContext;
-    }
-
 
     /**
      * Throws ResultNotFoundException if no matching response was found.
@@ -75,7 +63,7 @@ public class StorageParser
             // go sequentially through calls to match calls with lower index first
             context.setCall(call);
             Node node = call.getRequest().getPayloadNode();
-            Transformers.transform(node, this.requestTransformers, context);
+            Transformers.transform(node, this.requestAndResponseTransformers, context);
 
             if (NodeUtils.doesNodeMatchWithObject(node, context.getCurrentRequest()))
             {
@@ -88,110 +76,15 @@ public class StorageParser
 
     protected Object executeResponse(ParserCall call, Object currentRequest) throws Throwable
     {
-        TransformerContext transformerContext = new TransformerContext()
-                .setParserContext(parserContext)
-                .setCall(call)
-                .setCurrentRequest(currentRequest);
-
-        Throwable exception = createResponseStackTrace(call, transformerContext);
-        Object payload = createResponsePayload(call, transformerContext);
-        Object execute;
-
-        if (isScript(call))
-        {
-            GroovyShell shell = createResponseScript(exception, payload, currentRequest);
-            execute = shell.evaluate(call.getResponse().getScript());
-        }
-        else if (isStackTrace(call))
-        {
-            throw exception;
-        }
-        else if (isPayload(call))
-        {
-            execute = payload;
-        }
-        else
-        {
-            throw new RuntimeException("Invalid response configuration. Neither a script, nor stacktrace nor payload was set.");
-        }
-        return execute;
+        return this.responseExecutor.execute(call, currentRequest);
     }
 
-    protected List<Transformer> getRequestTransformers()
+    protected List<Transformer> getRequestAndResponseTransformers()
     {
         List<Transformer> transformers = new ArrayList<>();
         transformers.add(new VariableTransformer());
         transformers.add(new FieldReferenceTransformer());
         return transformers;
-    }
-
-    protected List<Transformer> getResponseTransformers()
-    {
-        List<Transformer> transformers = new ArrayList<>();
-        transformers.add(new VariableTransformer());
-        transformers.add(new FieldReferenceTransformer());
-        return transformers;
-    }
-
-    private Throwable createResponseStackTrace(ParserCall call, TransformerContext transformerContext)
-    {
-        ParserResponse response = call.getResponse();
-        Throwable exception = null;
-        if (isStackTrace(call))
-        {
-            String stacktrace = Transformers.transform(response.getStacktrace(), this.requestTransformers, transformerContext);
-            response.setStacktrace(stacktrace);
-            exception = StackTraceUnserialize.unserialize(stacktrace);
-        }
-        return exception;
-    }
-
-    private Object createResponsePayload(ParserCall call, TransformerContext transformerContext)
-    {
-        Object payload = null;
-        ParserResponse response = call.getResponse();
-        if (isPayload(call))
-        {
-            Transformers.transform(response.getPayloadNode(), this.responseTransformers, transformerContext);
-            payload = NodeUtils.createObjectWithNode(response.getPayloadNode());
-        }
-        return payload;
-    }
-
-    private GroovyShell createResponseScript(Throwable exception, Object payload, Object request)
-    {
-        Binding binding = new Binding();
-        binding.setVariable("env", System.getenv());
-        binding.setVariable("system", System.getProperties());
-        binding.setVariable("request", request);
-        binding.setVariable("stacktrace", exception);
-        binding.setVariable("response", payload);
-        return new GroovyShell(binding);
-    }
-
-    private boolean isScript(ParserCall call)
-    {
-        ParserResponse r = call.getResponse();
-        return !$.isNull(r.getScript()) && !r.getScript().trim().isEmpty();
-    }
-
-    private boolean isStackTrace(ParserCall call)
-    {
-        ParserResponse r = call.getResponse();
-        return !$.isNull(r.getStacktrace()) && !r.getStacktrace().trim().isEmpty();
-    }
-
-    private boolean isPayload(ParserCall call)
-    {
-        ParserResponse r = call.getResponse();
-        return !$.isNull(r.getPayloadNode());
-    }
-
-    public static void main(String[] args) throws Throwable
-    {
-        String hello = "hi";
-        File file = new File(new File("."), "impl/src/main/java/ch/abertschi/sct/storage.xml");
-        //new StorageParser(file).get(hello);
     }
 
     private void createFileIfNotExists(File file)

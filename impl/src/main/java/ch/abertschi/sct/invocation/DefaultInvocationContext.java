@@ -15,6 +15,8 @@ public class DefaultInvocationContext implements InvocationContext {
 
     private Method method;
 
+    private String targetName;
+
     private Object proxy;
 
     private Object[] parameters;
@@ -43,7 +45,13 @@ public class DefaultInvocationContext implements InvocationContext {
     }
 
     @Override
-    public Object getMethod() {
+    public String getTargetName()
+    {
+        return this.targetName;
+    }
+
+    @Override
+    public Method getMethod() {
         return this.method;
     }
 

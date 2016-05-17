@@ -215,17 +215,4 @@ public class SctConfigurationImpl
         this.replayingFileForEachCall = replayingFileForEachCall;
         return this;
     }
-
-    public boolean isSkip()
-    {
-        return getBoolSystemPropertyOrValue(CONFIG_SKIP, skip);
-    }
-
-    public SctConfigurationImpl setSkip(boolean skip)
-    {
-        this.skip = skip;
-        return this;
-    }
-
-
 }

@@ -7,7 +7,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Scanner;
 
-import ch.abertschi.sct.serial.XStreamProvider;
+import ch.abertschi.sct.parse.XStreamProvider;
 import com.thoughtworks.xstream.XStream;
 
 public class TestHelp {

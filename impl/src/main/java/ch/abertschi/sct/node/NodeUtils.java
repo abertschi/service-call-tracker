@@ -1,6 +1,6 @@
 package ch.abertschi.sct.node;
 
-import ch.abertschi.sct.serial.XStreamProvider;
+import ch.abertschi.sct.parse.XStreamProvider;
 import com.github.underscore.$;
 import com.thoughtworks.xstream.XStream;
 import org.jdom2.Document;
@@ -10,7 +10,6 @@ import org.jdom2.input.SAXBuilder;
 
 import java.io.IOException;
 import java.io.StringReader;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -20,6 +19,10 @@ import java.util.List;
 public class NodeUtils
 {
     private static final XStream XSTREAM = XStreamProvider.createXStream();
+
+    private NodeUtils()
+    {
+    }
 
     public static Node createNodeFromObject(Object object)
     {
@@ -86,6 +89,25 @@ public class NodeUtils
         return findNodeInTree(key, rootNode, null);
     }
 
+    public static Document xmlToDocument(String xml)
+    {
+        SAXBuilder builder = new SAXBuilder();
+        Document document = null;
+        try
+        {
+            document = builder.build(new StringReader(xml));
+        }
+        catch (JDOMException e)
+        {
+            throw new RuntimeException("Cant parse xml", e);
+        }
+        catch (IOException e)
+        {
+            throw new RuntimeException("IO Problems with xml", e);
+        }
+        return document;
+    }
+
     protected static Node findNodeInTree(String key, Node node, LinkedList<Node> history)
     {
         Node found = null;
@@ -126,24 +148,5 @@ public class NodeUtils
         history.forEach(node -> keyBuffer.append("." + node.getName()));
         String key = keyBuffer.toString();
         return key.length() > 0 ? key.substring(1) : null;
-    }
-
-    public static Document xmlToDocument(String xml)
-    {
-        SAXBuilder builder = new SAXBuilder();
-        Document document = null;
-        try
-        {
-            document = builder.build(new StringReader(xml));
-        }
-        catch (JDOMException e)
-        {
-            throw new RuntimeException("Cant parse xml", e);
-        }
-        catch (IOException e)
-        {
-            throw new RuntimeException("IO Problems with xml", e);
-        }
-        return document;
     }
 }

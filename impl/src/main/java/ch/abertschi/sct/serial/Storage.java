@@ -13,6 +13,12 @@ import java.util.List;
 @XStreamAlias("storage")
 public class Storage
 {
+    private List<Call> calls = new ArrayList<>();
+
+    public Storage()
+    {
+    }
+
     public List<Call> getCalls()
     {
         return calls;
@@ -22,18 +28,6 @@ public class Storage
     {
         this.calls = calls;
         return this;
-    }
 
-    private List<Call> calls = new ArrayList<>();
-
-    public Storage()
-    {
-        Call call = new Call();
-        calls.add(call);
-    }
-
-    public static void main(String[] args)
-    {
-        //System.out.println(XStream.GET.createXStream().toXML(new Storage()));
     }
 }

@@ -14,6 +14,8 @@ public class AspectjInvocationContext implements InvocationContext {
 
     private Object target;
 
+    private String targetName;
+
     private Method method;
 
     private Object proxy;
@@ -41,7 +43,13 @@ public class AspectjInvocationContext implements InvocationContext {
     }
 
     @Override
-    public Object getMethod() {
+    public String getTargetName()
+    {
+        return targetName;
+    }
+
+    @Override
+    public Method getMethod() {
         return this.method;
     }
 
@@ -93,4 +101,9 @@ public class AspectjInvocationContext implements InvocationContext {
                 + proceedCallable + "]";
     }
 
+    public AspectjInvocationContext setTargetName(String targetName)
+    {
+        this.targetName = targetName;
+        return this;
+    }
 }

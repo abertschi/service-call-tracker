@@ -1,5 +1,7 @@
 package ch.abertschi.sct.invocation;
 
+import java.lang.reflect.Method;
+
 /**
  * 
  * @author Andrin Bertschi
@@ -11,8 +13,10 @@ public interface InvocationContext {
     Object getProxy();
     
     Object getTarget();
+
+    String getTargetName();
     
-    Object getMethod();
+    Method getMethod();
     
     Object[] getParameters();
     
