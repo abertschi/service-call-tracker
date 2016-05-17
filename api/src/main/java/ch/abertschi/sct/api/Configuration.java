@@ -37,17 +37,6 @@ public class Configuration
     {
     }
 
-    public Object build()
-    {
-        return null;
-    }
-
-    public static Configuration createConfiguration()
-    {
-        Configuration factory = new Configuration();
-        return factory;
-    }
-
     public boolean isRecordingEnabled()
     {
         return recordingEnabled;

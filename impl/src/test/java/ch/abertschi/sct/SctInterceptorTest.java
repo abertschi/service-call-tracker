@@ -6,7 +6,6 @@ import org.junit.Test;
 import ch.abertschi.sct.api.SctConfigurator;
 import ch.abertschi.sct.domain.Customer;
 import ch.abertschi.sct.domain.CustomerService;
-import ch.abertschi.sct.helper.TestHelp;
 
 import java.io.File;
 import java.io.IOException;

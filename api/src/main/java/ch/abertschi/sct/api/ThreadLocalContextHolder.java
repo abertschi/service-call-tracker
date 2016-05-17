@@ -24,7 +24,6 @@ public class ThreadLocalContextHolder
         CONTEXT.get().put(key, payload);
     }
 
-
     public static Object get(String key)
     {
 
