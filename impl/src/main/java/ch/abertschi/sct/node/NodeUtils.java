@@ -39,7 +39,7 @@ public class NodeUtils
     public static boolean doesNodeMatchWithObject(Node node, Object object)
     {
         Node otherNode = createNodeFromObject(object);
-        return node.doesMatchWith(otherNode);
+        return node.doesMatchWith(otherNode, true);
     }
 
     public static Node parseDomToNode(Element element)

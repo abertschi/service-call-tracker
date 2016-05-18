@@ -8,9 +8,9 @@ public class Customer {
 
     private String comment;
 
-    public Customer(String name, int yearOfBirth) {
+    public Customer(String name, String comment) {
         this.name = name;
-        this.yearOfBirth = yearOfBirth;
+        setComment(comment);
     }
 
     public void setComment(String comment)
@@ -37,7 +37,4 @@ public class Customer {
     public void setName(String name) {
         this.name = name;
     }
-
-
-
 }

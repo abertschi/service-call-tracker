@@ -25,10 +25,16 @@ public class Node
     {
     }
 
+
     public boolean doesMatchWith(Node other)
     {
+        return doesMatchWith(other, false);
+    }
+
+    public boolean doesMatchWith(Node other, boolean ignoreRootNames)
+    {
         boolean success = false;
-        if (this.name.equals(other.name) || true) // TODO: outer names are not compatible
+        if (this.name.equals(other.name) || ignoreRootNames) // TODO: outer names are not compatible
         {
             if (this.isContainer && other.isContainer)
             {

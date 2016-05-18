@@ -13,8 +13,6 @@ public interface InvocationContext {
     Object getProxy();
     
     Object getTarget();
-
-    String getTargetName();
     
     Method getMethod();
     

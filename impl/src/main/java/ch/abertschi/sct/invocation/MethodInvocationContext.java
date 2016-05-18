@@ -2,30 +2,30 @@ package ch.abertschi.sct.invocation;
 
 import java.lang.reflect.Method;
 import java.util.Arrays;
-import java.util.concurrent.Callable;
 
 /**
- * 
+ *
  * @author Andrin Bertschi
  * @since 30.06.2014
- * 
+ *
  */
-public class AspectjInvocationContext implements InvocationContext {
+public class MethodInvocationContext implements InvocationContext {
 
     private Object target;
-
-    private String targetName;
 
     private Method method;
 
     private Object proxy;
 
     private Object[] parameters;
-    
-    private Callable<?> proceedCallable;
 
-    public AspectjInvocationContext(Callable<?> proceedCallable) {
-        this.proceedCallable = proceedCallable;
+    public MethodInvocationContext(Object target, Method method, Object[] parameters) {
+        this.target = target;
+        this.method = method;
+        this.parameters = parameters;
+    }
+
+    public MethodInvocationContext() {
     }
 
     // -----------------------------------------------------------
@@ -43,12 +43,6 @@ public class AspectjInvocationContext implements InvocationContext {
     }
 
     @Override
-    public String getTargetName()
-    {
-        return targetName;
-    }
-
-    @Override
     public Method getMethod() {
         return this.method;
     }
@@ -60,12 +54,12 @@ public class AspectjInvocationContext implements InvocationContext {
 
     @Override
     public void setParameters(Object[] params) {
-     this.parameters = params;
+        this.parameters = params;
     }
 
     @Override
     public Object proceed() throws Exception {
-        return proceedCallable.call();        
+        return this.method.invoke(target, getParameters());
     }
 
     // -----------------------------------------------------------
@@ -84,26 +78,10 @@ public class AspectjInvocationContext implements InvocationContext {
         this.proxy = proxy;
     }
 
-
-    public Callable<?> getProceedCallable() {
-        return proceedCallable;
-    }
-
-
-    public void setProceedCallable(Callable<Object> proceedCallable) {
-        this.proceedCallable = proceedCallable;
-    }
-
     @Override
     public String toString() {
-        return "AspectjInvocationContext [target=" + target + ", method=" + method + ", proxy="
-                + proxy + ", parameters=" + Arrays.toString(parameters) + ", proceedCallable="
-                + proceedCallable + "]";
+        return "DefaultInvocationContext [target=" + target + ", method=" + method + ", proxy="
+                + proxy + ", parameters=" + Arrays.toString(parameters) + "]";
     }
 
-    public AspectjInvocationContext setTargetName(String targetName)
-    {
-        this.targetName = targetName;
-        return this;
-    }
 }
