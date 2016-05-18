@@ -9,4 +9,10 @@ public class SctException extends RuntimeException
         super(e);
     }
 
+
+    public SctException(String msg, Exception e)
+    {
+        super(msg, e);
+    }
+
 }

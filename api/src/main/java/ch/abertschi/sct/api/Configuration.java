@@ -9,6 +9,7 @@ public class Configuration
 {
     // general
     private boolean throwExceptionOnNotFound = false;
+    private boolean throwExceptionOnIncompatibleReturnType = true;
     //private boolean ignoreUnknownFields = false;
 
     // recording
@@ -17,6 +18,7 @@ public class Configuration
     private INPUT_SOURCE recordingSourceType = INPUT_SOURCE.SINGLE_FILE;
     private boolean recordingSkipDoubles = true;
     private RECORDING_MODE recordingMode = RECORDING_MODE.OVERWRITE;
+
 
     public enum RECORDING_MODE
     {
@@ -133,6 +135,17 @@ public class Configuration
     public Configuration setThrowExceptionOnNotFound(boolean throwExceptionOnNotFound)
     {
         this.throwExceptionOnNotFound = throwExceptionOnNotFound;
+        return this;
+    }
+
+    public boolean isThrowExceptionOnIncompatibleReturnType()
+    {
+        return throwExceptionOnIncompatibleReturnType;
+    }
+
+    public Configuration setThrowExceptionOnIncompatibleReturnType(boolean throwExceptionOnIncompatibleReturnType)
+    {
+        this.throwExceptionOnIncompatibleReturnType = throwExceptionOnIncompatibleReturnType;
         return this;
     }
 

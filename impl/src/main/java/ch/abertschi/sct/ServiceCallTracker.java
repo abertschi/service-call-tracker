@@ -28,43 +28,42 @@ public class ServiceCallTracker implements Interceptor
         this.config = config;
     }
 
-    private boolean isSkip()
-    {
-        return isSystemPropertyBooleanSet(CONFIG_SKIP);
-    }
-
-    private boolean isSkipRecording()
-    {
-        return isSkip() || isSystemPropertyBooleanSet(CONFIG_SKIP_RECORDING);
-    }
-
-    private boolean isSkipReplaying()
-    {
-        return isSkip() || isSystemPropertyBooleanSet(CONFIG_SKIP_REPLAYING);
-    }
-
     @Override
     public Object invoke(InvocationContext ctx)
     {
-        Object response = null;
+        Object response;
         final Object request = getInCorrectDimension(ctx.getParameters());
-        if (config.isReplayingEnabled()
-                && config.isRecordingEnabled()
-                && !isSkipRecording()
-                && !isSkipReplaying())
+        if (isRecording() || isReplaying())
         {
-            LOG.info("recording and replaying call of {}", getTargetName(ctx));
-            response = performRecordingAndReplaying(request, ctx);
-        }
-        else if (config.isReplayingEnabled() && !isSkipReplaying())
-        {
-            LOG.info("replaying call of {}", getTargetName(ctx));
-            response = performReplaying(request, ctx);
-        }
-        else if (config.isRecordingEnabled() && !isSkipRecording())
-        {
-            LOG.info("recording call of {}", getTargetName(ctx));
-            response = performRecording(request, ctx);
+            if (isRecording() && isReplaying())
+            {
+                LOG.info("recording and replaying call of {}", getTargetName(ctx));
+                response = performRecordingAndReplaying(request, ctx);
+            }
+            else if (isReplaying())
+            {
+                LOG.info("replaying call of {}", getTargetName(ctx));
+                response = performReplaying(request, ctx, config.isThrowExceptionOnNotFound());
+            }
+            else
+            {
+                LOG.info("recording call of {}", getTargetName(ctx));
+                response = performRecording(request, ctx);
+            }
+            if (!doesReturnTypeMatch(ctx, response))
+            {
+                String msg = String.format("Stored response does not match with method signature %s" +
+                        "The method return type was changed.", getTargetName(ctx));
+                LOG.error(msg);
+                if (config.isThrowExceptionOnIncompatibleReturnType())
+                {
+                    throw new SctException(msg, null);
+                }
+                else
+                {
+                    response = proceed(ctx);
+                }
+            }
         }
         else
         {
@@ -73,12 +72,17 @@ public class ServiceCallTracker implements Interceptor
         return response;
     }
 
+    private boolean doesReturnTypeMatch(InvocationContext ctx, Object response)
+    {
+        return response == null || ctx.getMethod().getReturnType().isAssignableFrom(response.getClass());
+    }
+
     private Object performRecordingAndReplaying(Object request, InvocationContext ctx)
     {
         Object response;
         try
         {
-            response = storageCollection.get(request, ctx);
+            response = performReplaying(request, ctx, true);
         }
         catch (ResultNotFoundException e)
         {
@@ -88,7 +92,7 @@ public class ServiceCallTracker implements Interceptor
         return response;
     }
 
-    private Object performReplaying(Object request, InvocationContext ctx)
+    private Object performReplaying(Object request, InvocationContext ctx, boolean throwExceptionOnNotFound)
     {
         Object response;
         try
@@ -97,7 +101,7 @@ public class ServiceCallTracker implements Interceptor
         }
         catch (ResultNotFoundException e)
         {
-            if (config.isThrowExceptionOnNotFound())
+            if (throwExceptionOnNotFound)
             {
                 throw e;
             }
@@ -161,5 +165,30 @@ public class ServiceCallTracker implements Interceptor
         String target = invocation.getMethod().getDeclaringClass().getName();
         String method = invocation.getMethod().getName();
         return String.format("%s.%s(...)", target, method);
+    }
+
+    private boolean isSkip()
+    {
+        return isSystemPropertyBooleanSet(CONFIG_SKIP);
+    }
+
+    private boolean isSkipRecording()
+    {
+        return isSkip() || isSystemPropertyBooleanSet(CONFIG_SKIP_RECORDING);
+    }
+
+    private boolean isSkipReplaying()
+    {
+        return isSkip() || isSystemPropertyBooleanSet(CONFIG_SKIP_REPLAYING);
+    }
+
+    private boolean isRecording()
+    {
+        return !isSkipRecording() && config.isRecordingEnabled();
+    }
+
+    private boolean isReplaying()
+    {
+        return !isSkipReplaying() && config.isReplayingEnabled();
     }
 }
