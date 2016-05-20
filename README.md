@@ -1,6 +1,16 @@
 - yo here is work in progress!
 
-# service-call-tracker
+![service-call-tracker](sct.png)
+
+------
+
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/ch.abertschi.sct/service-call-tracker-parent/badge.svg?style=flat)](http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22ch.abertschi.sct%22)
+[![Build Status](https://travis-ci.org/abertschi/service-call-tracker.svg?branch=master)](https://travis-ci.org/abertschi/service-call-tracker) 
+[![codecov](https://codecov.io/gh/abertschi/service-call-tracker/branch/master/graph/badge.svg)](https://codecov.io/gh/abertschi/service-call-tracker)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/368d59ada8a7491aa5499be3f8906ac7)](https://www.codacy.com/app/abertschi/service-call-tracker?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=abertschi/service-call-tracker&amp;utm_campaign=Badge_Grade)
+[![Apache 2](http://img.shields.io/badge/license-APACHE2-blue.svg)](https://www.apache.org/licenses/LICENSE-2.0.html)
+
+> A Method call marshaller for Java
 
 service-call-tracker is a method call marshaller for Java. It can record method invocations and is able to stub their implementation by replaying previously recorded method calls. Created with the aim to provide more reliable test data in development and testing tiers  of an enterprise application, service-call-tracker can be used to provide a set of always-available test data.
 
@@ -18,6 +28,56 @@ The project artefacts are available on maven central.
   <artifactId>service-call-tracker-impl</artifactId>
 </dependency>
 ```
+
+## Getting started
+
+In order to gain control over method invocations, service-call-tracker must be hooked into your code
+and an instance of `ch.abertschi.sct.api.InvocationContext` must be built.
+
+There are various ways how to intercept method calls in Java.
+Intercepting using the AspectJ compiler ("ajc") and the service-call-tracker extension for JBoss Arquillian are further described.
+
+- AspectJ
+- Arquillian Extension for service-call-tracker
+- Java Dynamic Proxy API
+- Any bean container framework providing interceptors (ie. EJB, CDI)
+
+
+### Recording 
+
+```java
+Configuration config = new Configuration();
+config.setRecordingEnabled(true);
+config.setRecordingSource(new File("my-recordings.xml"));
+ServiceCallTracker serviceCallTracker = new ServiceCallTracker(config);
+
+// gain access to a method call and build an InvocationContext
+InvocationContext currentCall = ...
+
+// invoke method an records response to my-recordings.xml
+Object result = serviceCallTracker.invoke(currentCall);
+```
+
+### Replaying 
+
+```java
+Configuration config = new Configuration();
+config.setReplayingEnabled(true);
+config.setReplayingSource(new File("my-replayings.xml"));
+ServiceCallTracker serviceCallTracker = new ServiceCallTracker(config);
+
+// gain access to a method call and build an InvocationContext
+InvocationContext currentCall = ...
+
+// build respone from my-replayings.xml if currentCall previously recorded
+Object result = serviceCallTracker.invoke(currentCall);
+```
+
+### Interceptor
+
+#### Intercepting with AspectJ
+
+#### Intercepting in integration tests with JBoss Arquillian
 
 ## Data Storage
 
@@ -113,6 +173,11 @@ These global variable are available in your Groovy script.
 | env              | Access to environment variables
 
 
+You can set a script, a stacktrace and a payload as a response for a call.
+In your Groovy script you have access to the throwable instance of the stacktrace tag and the return object of the payload tag.
+Once you set a script, the stacktrace and payload tags are ignored and you need to return or throw any objects within your script.
+
+The table below shows the priority of execution of these tags (high to low)
 
 | Priority  | Tag          
 |------------------|---|
@@ -168,54 +233,5 @@ Some common regular expressions are predefined and accessible as `#{regex.<name>
 | regex.any  | Ignore field
 | regex.numeric | Match only if field is numeric
 
-
-## Getting started
-
-### Recording 
-
-```java
-Configuration config = new Configuration();
-config.setRecordingEnabled(true);
-config.setRecordingSource(new File("my-recordings.xml"));
-ServiceCallTracker serviceCallTracker = new ServiceCallTracker(config);
-
-// gain access to a method call and build an InvocationContext
-InvocationContext currentCall = ...
-
-// invoke method an records response to my-recordings.xml
-Object result = serviceCallTracker.invoke(currentCall);
-```
-
-### Replaying 
-
-```java
-Configuration config = new Configuration();
-config.setReplayingEnabled(true);
-config.setReplayingSource(new File("my-replayings.xml"));
-ServiceCallTracker serviceCallTracker = new ServiceCallTracker(config);
-
-// gain access to a method call and build an InvocationContext
-InvocationContext currentCall = ...
-
-// build respone from my-replayings.xml if currentCall previously recorded
-Object result = serviceCallTracker.invoke(currentCall);
-```
-
-### Interceptor
-
-In order to gain control over method invocations, service-call-tracker must be hooked into your code
-and an instance of `ch.abertschi.sct.api.InvocationContext` must be built.
-Intercepting using the AspectJ compiler ("ajc") and JBoss Arquillian are described in this document.
-
-- AspectJ
-- Arquillian Extension for service-call-tracker
-- Java Dynamic Proxy API
-- Any bean container framework providing interceptors (ie. EJB, CDI)
-
-#### Intercepting with AspectJ
-
-#### Intercepting in integration tests with JBoss Arquillian
-
-### Interceptor configuration
 
 
