@@ -23,7 +23,7 @@ The project artefacts are available on maven central.
 
 The default configuration marshalles method calls to a file of key-value pairs of `<call/>`. The method arguments placed in `<request/>` as the key and their return value placed in `<response/>` acts as the value. 
 
-`<payload/>` sections within `<request/>` and `<response/>` of a `<call/>` contain the marshalled method calls.
+`<payload/>` sections within `<request/>` and `<response/>` contain the marshalled method calls.
 
 ```xml
 <storage>
@@ -171,6 +171,51 @@ Some common regular expressions are predefined and accessible as `#{regex.<name>
 
 ## Getting started
 
-### Configuration
+### Recording 
 
-### Integration testing with JBoss Arquillian
+```java
+Configuration config = new Configuration();
+config.setRecordingEnabled(true);
+config.setRecordingSource(new File("my-recordings.xml"));
+ServiceCallTracker serviceCallTracker = new ServiceCallTracker(config);
+
+// gain access to a method call and build an InvocationContext
+InvocationContext currentCall = ...
+
+// invoke method an records response to my-recordings.xml
+Object result = serviceCallTracker.invoke(currentCall);
+```
+
+### Replaying 
+
+```java
+Configuration config = new Configuration();
+config.setReplayingEnabled(true);
+config.setReplayingSource(new File("my-replayings.xml"));
+ServiceCallTracker serviceCallTracker = new ServiceCallTracker(config);
+
+// gain access to a method call and build an InvocationContext
+InvocationContext currentCall = ...
+
+// build respone from my-replayings.xml if currentCall previously recorded
+Object result = serviceCallTracker.invoke(currentCall);
+```
+
+### Interceptor
+
+In order to gain control over method invocations, service-call-tracker must be hooked into your code
+and an instance of `ch.abertschi.sct.api.InvocationContext` must be built.
+Intercepting using the AspectJ compiler ("ajc") and JBoss Arquillian are described in this document.
+
+- AspectJ
+- Arquillian Extension for service-call-tracker
+- Java Dynamic Proxy API
+- Any bean container framework providing interceptors (ie. EJB, CDI)
+
+#### Intercepting with AspectJ
+
+#### Intercepting in integration tests with JBoss Arquillian
+
+### Interceptor configuration
+
+
