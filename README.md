@@ -8,9 +8,20 @@ service-call-tracker is a method call marshaller for Java. It can record method 
 
 The project artefacts are available on maven central.
 
+```xml  
+<dependency>
+  <groupId>ch.abertschi.sct</groupId>
+  <artifactId>service-call-tracker-api</artifactId>
+</dependency>
+<dependency>
+  <groupId>ch.abertschi.sct</groupId>
+  <artifactId>service-call-tracker-impl</artifactId>
+</dependency>
+```
+
 ## Data Storage
 
-The default configuration marshalles method calls to a file of key-value pairs of `<call/>`. The method arguments as the key (`<request/>`) and their return value as the value (`<response/>`). 
+The default configuration marshalles method calls to a file of key-value pairs of `<call/>`. The method arguments placed in `<request/>` as the key and their return value placed in `<response/>` acts as the value. 
 
 `<payload/>` sections within `<request/>` and `<response/>` of a `<call/>` contain the marshalled method calls.
 
@@ -65,10 +76,11 @@ This is useful to test some worse-case scenarios.
   </response>
 </call>
 ```
+The library [stacktrace-unserialize](https://github.com/abertschi/stacktrace-unserialize) is used to convert stacktraces to throwable.
 
 ### Groovy Scripting
 
-If a static stacktrace is not enough, a Groovy Shell `<script/>` can be fired up and an exception or any other response
+If a static stacktrace is not enough, a Groovy Shell can be fired up and an exception or any other response put into `<script/>`
 can dynamically be formed during execution.
 
 ```xml
@@ -82,7 +94,7 @@ can dynamically be formed during execution.
   <stacktrace/>
     <script>
       <!CDATA[[
-        String msg = request.payload.string + "was not found because an error happened!"
+        String msg = request.payload.string + " was not found because an error happened!"
         throw new RuntimeException(msg)
       ]]>
     </script>
@@ -90,19 +102,75 @@ can dynamically be formed during execution.
 </call>
 ```
 
+These global variable are available in your Groovy script.
 
-| Properties       
-|------------------|---|---|---|---|
-| request.payload  |   |   |   |   |
-| response.payload |   |   |   |   |
-| stacktrace       |   |   |   |   |
-| system           |   |   |   |   |
-| env              |   |   |   |   |
+| Properties | Description          |
+|------------------|---|
+| request.payload  | Access to fields of the current request                    
+| response.payload | Access to fields of the response payload tag
+| stacktrace       | The stacktrace as instance of Throwable if set in the stacktrace tag of the response
+| system           | Access to Java system variables (i.e. system.mySystemVarName)
+| env              | Access to environment variables
+
+
+
+| Priority  | Tag          
+|------------------|---|
+| 1   | script
+| 2  | stacktrace
+| 3   | payload  | 
+
+
+### EL Expressions
+
+To put expressions into the `<payload/>` sections of the `<request/>` and `<response/>` objects of a call, a syntax valid to the Java Expression Language can be used.
+
+```xml
+<call>
+  <request>
+    <payload class="object-array">
+      <string>Peter Parker</string>
+      <int>1</int>
+    </payload>
+  </request>
+  <response>
+  <payload class="ch.abertschi.sct.domain.Customer">
+    <name>#{request.payload.string}</name>
+    <yearOfBirth>1970</yearOfBirth>
+    <comment>I am spiderman!</comment>
+    </payload>
+  </response>
+</call>
+```
+
+### Regular expressions
+
+In any field of the request payload, you can use regular rexpressions the change the request matching behaviour.
+
+The example below throws an exception for any request given.
+The calls with the lowest index in the file is checked first to match the current index.
+
+```xml
+<call>
+  <request>
+    <payload>*.</payload>
+  </request>
+  <response>
+    <stacktrace>java.lang.Exception: I always throw an Exception</stacktrace>
+  </response>
+</call>
+```
+
+Some common regular expressions are predefined and accessible as `#{regex.<name>}`.
+
+| Properties | Description          |
+|------------------|---|
+| regex.any  | Ignore field
+| regex.numeric | Match only if field is numeric
 
 
 ## Getting started
 
 ### Configuration
-
 
 ### Integration testing with JBoss Arquillian
