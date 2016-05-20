@@ -145,7 +145,7 @@ To put expressions into the `<payload/>` sections of the `<request/>` and `<resp
 
 ### Regular expressions
 
-In any field of the request payload, you can use regular rexpressions the change the request matching behaviour.
+In any field of the request payload, you can use regular rexpressions to alter the request matching behaviour.
 
 The example below throws an exception for any request given.
 The calls with the lowest index in the file is checked first to match the current index.
