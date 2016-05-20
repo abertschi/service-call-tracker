@@ -1,8 +1,4 @@
-- yo here is work in progress!
-
 ![service-call-tracker](sct.png)
-
-
 
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/ch.abertschi.sct/service-call-tracker-parent/badge.svg?style=flat)](http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22ch.abertschi.sct%22)
 [![Build Status](https://travis-ci.org/abertschi/service-call-tracker.svg?branch=master)](https://travis-ci.org/abertschi/service-call-tracker) 
@@ -13,6 +9,8 @@
 ------
 
 # service-call-tracker
+
+
 
 service-call-tracker is a method call marshaller for Java. It can record method invocations and is able to stub their implementation by replaying previously recorded method calls. Created with the aim to provide more reliable test data in development and testing tiers  of an enterprise application, service-call-tracker can be used to provide a set of always-available test data.
 
