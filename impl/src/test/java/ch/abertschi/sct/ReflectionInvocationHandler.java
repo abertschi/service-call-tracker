@@ -1,8 +1,7 @@
 package ch.abertschi.sct;
 
 import ch.abertschi.sct.api.SctConfigurator;
-import ch.abertschi.sct.invocation.DefaultInvocationContext;
-import ch.abertschi.sct.invocation.MethodInvocationContext;
+import ch.abertschi.sct.api.MethodInvocationContext;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;

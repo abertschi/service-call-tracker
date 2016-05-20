@@ -9,5 +9,4 @@ package ch.abertschi.sct.api;
 public interface Interceptor {
 	
 	Object invoke(InvocationContext ctx);
-
 }

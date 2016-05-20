@@ -1,7 +1,7 @@
 package ch.abertschi.sct;
 
 import ch.abertschi.sct.api.Configuration;
-import ch.abertschi.sct.invocation.InvocationContext;
+import ch.abertschi.sct.api.InvocationContext;
 import ch.abertschi.sct.parse.StorageParser;
 import ch.abertschi.sct.parse.StorageWriter;
 import ch.abertschi.sct.serial.Call;
