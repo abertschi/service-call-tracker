@@ -1,6 +1,9 @@
 package ch.abertschi.sct;
 
-import ch.abertschi.sct.api.*;
+import ch.abertschi.sct.api.Interceptor;
+import ch.abertschi.sct.api.SctException;
+import ch.abertschi.sct.api.Configuration;
+import ch.abertschi.sct.api.invocation.InvocationContext;
 import ch.abertschi.sct.util.ResultNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

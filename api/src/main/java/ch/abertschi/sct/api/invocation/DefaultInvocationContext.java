@@ -1,4 +1,4 @@
-package ch.abertschi.sct.api;
+package ch.abertschi.sct.api.invocation;
 
 import java.lang.reflect.Method;
 import java.util.Arrays;
@@ -78,11 +78,9 @@ public class DefaultInvocationContext implements InvocationContext {
         this.proxy = proxy;
     }
 
-
     public Callable<?> getProceedCallable() {
         return proceedCallable;
     }
-
 
     public void setProceedCallable(Callable<Object> proceedCallable) {
         this.proceedCallable = proceedCallable;
@@ -90,7 +88,7 @@ public class DefaultInvocationContext implements InvocationContext {
 
     @Override
     public String toString() {
-        return "AspectjInvocationContext [target=" + target + ", method=" + method + ", proxy="
+        return "DefaultInvocationContext [target=" + target + ", method=" + method + ", proxy="
                 + proxy + ", parameters=" + Arrays.toString(parameters) + ", proceedCallable="
                 + proceedCallable + "]";
     }

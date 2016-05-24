@@ -1,4 +1,4 @@
-package ch.abertschi.sct.api;
+package ch.abertschi.sct.api.invocation;
 
 import java.lang.reflect.Method;
 

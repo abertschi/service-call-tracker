@@ -20,6 +20,7 @@ public class ServiceCallTrackerFactory
     public static Interceptor lookupInterceptor(Configuration config) throws SctException
     {
         Interceptor interceptor = null;
+        String errMsg = "Can not lookup instance of service-call-tracker";
         try
         {
             Class<?> clazz = Class.forName(DEFAULT_IMPL);
@@ -28,23 +29,23 @@ public class ServiceCallTrackerFactory
         }
         catch (ClassNotFoundException e)
         {
-            throw new SctException(e);
+            throw new SctException(errMsg, e);
         }
         catch (NoSuchMethodException e)
         {
-            throw new SctException(e);
+            throw new SctException(errMsg, e);
         }
         catch (InvocationTargetException e)
         {
-            throw new SctException(e);
+            throw new SctException(errMsg, e);
         }
         catch (InstantiationException e)
         {
-            throw new SctException(e);
+            throw new SctException(errMsg, e);
         }
         catch (IllegalAccessException e)
         {
-            throw new SctException(e);
+            throw new SctException(errMsg, e);
         }
         return interceptor;
     }

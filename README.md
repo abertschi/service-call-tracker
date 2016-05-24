@@ -32,7 +32,7 @@ The project artefacts are available on maven central.
 ## Getting started
 
 In order to gain control over method invocations, service-call-tracker must be hooked into your code
-and an instance of `ch.abertschi.sct.api.InvocationContext` must be built.
+and an instance of `ch.abertschi.sct.api.invocation.InvocationContext` must be built.
 
 There are various ways how to intercept method calls in Java.
 Intercepting using the AspectJ compiler ("ajc") and the service-call-tracker extension for JBoss Arquillian are further described.

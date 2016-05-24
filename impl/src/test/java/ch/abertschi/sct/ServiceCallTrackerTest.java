@@ -2,21 +2,16 @@ package ch.abertschi.sct;
 
 import ch.abertschi.sct.api.Configuration;
 import ch.abertschi.sct.parse.StorageParser;
-import org.junit.Assert;
 import org.junit.Test;
 import ch.abertschi.sct.api.SctConfigurator;
 import ch.abertschi.sct.domain.Customer;
 import ch.abertschi.sct.domain.CustomerService;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Proxy;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.Scanner;
 
 public class ServiceCallTrackerTest
 {

@@ -1,4 +1,4 @@
-package ch.abertschi.sct.api;
+package ch.abertschi.sct.api.invocation;
 
 import java.lang.reflect.Method;
 import java.util.Arrays;
@@ -80,7 +80,7 @@ public class MethodInvocationContext implements InvocationContext {
 
     @Override
     public String toString() {
-        return "DefaultInvocationContext [target=" + target + ", method=" + method + ", proxy="
+        return "MethodInvocationContext [target=" + target + ", method=" + method + ", proxy="
                 + proxy + ", parameters=" + Arrays.toString(parameters) + "]";
     }
 

@@ -1,5 +1,7 @@
 package ch.abertschi.sct.api;
 
+import ch.abertschi.sct.api.invocation.InvocationContext;
+
 /**
  * 
  * @author Andrin Bertschi
