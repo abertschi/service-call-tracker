@@ -10,6 +10,10 @@ public class ResultNotFoundException extends SctException
         super(e);
     }
 
+    public ResultNotFoundException() {
+        super(null);
+    }
+
     public ResultNotFoundException(String msg)
     {
         super(msg, null);

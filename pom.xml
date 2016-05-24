@@ -10,7 +10,7 @@
 
     <groupId>ch.abertschi.sct</groupId>
     <artifactId>service-call-tracker-parent</artifactId>
-    <version>0.1.0-alpha2-SNAPSHOT</version>
+    <version>0.1.0-alpha2</version>
 
     <packaging>pom</packaging>
 
