@@ -9,6 +9,7 @@ import com.github.underscore.$;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,6 +26,22 @@ public class StorageParser
     {
         createFileIfNotExists(source);
         this.parserContext = new XmlParser().parse(source);
+        init();
+    }
+
+    public StorageParser(InputStream source)
+    {
+        this(convertStreamToString(source));
+    }
+
+    public StorageParser(String source)
+    {
+        this.parserContext = new XmlParser().parse(source);
+        init();
+    }
+
+    private void init()
+    {
         this.requestAndResponseTransformers = getRequestAndResponseTransformers();
         this.responseExecutor = new ResponseExecutor(parserContext, requestAndResponseTransformers);
     }
@@ -101,5 +118,15 @@ public class StorageParser
                 throw new RuntimeException(e);
             }
         }
+    }
+
+    private static String convertStreamToString(InputStream is)
+    {
+        if (is == null)
+        {
+            return "";
+        }
+        java.util.Scanner s = new java.util.Scanner(is, "UTF-8").useDelimiter("\\A");
+        return s.hasNext() ? s.next() : "";
     }
 }

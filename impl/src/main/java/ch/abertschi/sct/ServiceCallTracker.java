@@ -4,6 +4,7 @@ import ch.abertschi.sct.api.Interceptor;
 import ch.abertschi.sct.api.SctException;
 import ch.abertschi.sct.api.Configuration;
 import ch.abertschi.sct.api.invocation.InvocationContext;
+import ch.abertschi.sct.parse.XStreamProvider;
 import ch.abertschi.sct.util.ResultNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,7 +34,14 @@ public class ServiceCallTracker implements Interceptor
     {
         Object response;
         final Object request = getInCorrectDimension(ctx.getParameters());
-        if (isRecording() || isReplaying())
+
+        if (!isValidContext(ctx))
+        {
+            LOG.error("Invalid Invocation Context set. Can not perform interception with {}", stringify(ctx));
+            response = proceed(ctx);
+
+        }
+        else if (isRecording() || isReplaying())
         {
             if (isRecording() && isReplaying())
             {
@@ -190,5 +198,15 @@ public class ServiceCallTracker implements Interceptor
     private boolean isReplaying()
     {
         return !isSkipReplaying() && config.isReplayingEnabled();
+    }
+
+    private boolean isValidContext(InvocationContext ctx)
+    {
+        return ctx.getMethod() != null;
+    }
+
+    private String stringify(Object obj)
+    {
+        return XStreamProvider.createXStream().toXML(obj);
     }
 }

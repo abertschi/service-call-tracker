@@ -23,8 +23,10 @@ public class ServiceCallTrackerFactory
         String errMsg = "Can not lookup instance of service-call-tracker";
         try
         {
-            Class<?> clazz = Class.forName(DEFAULT_IMPL);
+            ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+            Class<?> clazz = classLoader.loadClass(DEFAULT_IMPL);
             Constructor<?> constructor = clazz.getConstructor(Configuration.class);
+            constructor.setAccessible(true);
             interceptor = (Interceptor) constructor.newInstance(new Object[]{config});
         }
         catch (ClassNotFoundException e)

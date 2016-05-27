@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Proxy;
+import java.net.URL;
 
 public class ServiceCallTrackerTest
 {
@@ -35,6 +36,7 @@ public class ServiceCallTrackerTest
 
         //then
         String is = TestUtils.readFile(recordingFile.toURL());
+        System.out.println(is);
         StorageParser parser = new StorageParser(recordingFile);
 
         Object[] parkerArgs = {"Parker", "hi peter!"};
@@ -48,6 +50,22 @@ public class ServiceCallTrackerTest
         Object[] venomArgs = {"Venom", "hi venom!"};
         Customer venomParsed = (Customer) parser.get(venomArgs);
         TestUtils.assertCompareAsXml(venom, venomParsed);
+    }
+
+    @Test
+    public void test(){
+        CustomerService service = getDefaultCustomerService();
+        Configuration config = new Configuration();
+        config.setReplayingEnabled(true);
+        URL replay = ClassLoader.getSystemClassLoader().getResource("test");
+        System.out.println(replay);
+        config.setReplayingSource(replay);
+        config.setReplayingSourceType(Configuration.INPUT_SOURCE.DIRECTORY);
+        SctConfigurator.getInstance().setGlobalConfiguration(config);
+
+        Customer parker = service.getCustomer("Parker", "hi peter!");
+
+
     }
 
     private CustomerService getDefaultCustomerService()

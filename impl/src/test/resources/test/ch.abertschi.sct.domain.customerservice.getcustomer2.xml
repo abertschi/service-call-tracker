@@ -1,0 +1,12 @@
+<storage>
+    <calls>
+        <call>
+            <request>
+                <payload>#{regex.any}</payload>
+            </request>
+            <response>
+                <stacktrace>java.lang.RuntimeException: Error thrown</stacktrace>
+            </response>
+        </call>
+    </calls>
+</storage>

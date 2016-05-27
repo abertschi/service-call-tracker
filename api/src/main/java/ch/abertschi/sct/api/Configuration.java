@@ -1,6 +1,8 @@
 package ch.abertschi.sct.api;
 
 import java.io.File;
+import java.net.URI;
+import java.net.URL;
 
 /**
  * Created by abertschi on 17/05/16.
@@ -32,7 +34,7 @@ public class Configuration
 
     // replaying
     private boolean replayingEnabled = false;
-    private File replayingSource;
+    private URL replayingSource;
     private INPUT_SOURCE replayingSourceType = INPUT_SOURCE.SINGLE_FILE;
 
     public Configuration()
@@ -105,12 +107,12 @@ public class Configuration
         return this;
     }
 
-    public File getReplayingSource()
+    public URL getReplayingSource()
     {
         return replayingSource;
     }
 
-    public Configuration setReplayingSource(File replayingSource)
+    public Configuration setReplayingSource(URL replayingSource)
     {
         this.replayingSource = replayingSource;
         return this;

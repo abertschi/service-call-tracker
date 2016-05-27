@@ -95,9 +95,10 @@ public class XmlParser
         }
         String stacktraceValue = $.isNull(stacktrace) ? null : stacktrace.getText();
         String scriptValue = $.isNull(script) ? null : script.getText();
+        String payloadRaw = $.isNull(payload) ? null : output.outputString(payload);
 
         return new ParserResponse()
-                .setPayloadRaw(output.outputString(payload))
+                .setPayloadRaw(payloadRaw)
                 .setScript(scriptValue)
                 .setStacktrace(stacktraceValue)
                 .setPayloadNode(payloadNode);
