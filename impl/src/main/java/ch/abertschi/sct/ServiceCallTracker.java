@@ -84,7 +84,8 @@ public class ServiceCallTracker implements Interceptor
 
     private boolean doesReturnTypeMatch(InvocationContext ctx, Object response)
     {
-        return response == null || ctx.getMethod().getReturnType().isAssignableFrom(response.getClass());
+        return response == null || ctx.getMethod() == null ||
+                ctx.getMethod().getReturnType().isAssignableFrom(response.getClass());
     }
 
     private Object performRecordingAndReplaying(Object request, InvocationContext ctx)
@@ -213,7 +214,7 @@ public class ServiceCallTracker implements Interceptor
 
     private boolean isValidContext(InvocationContext ctx)
     {
-        return ctx.getMethod() != null || ctx.getTarget() == null;
+        return ctx.getMethod() != null || ctx.getTarget() != null;
     }
 
     private String stringify(Object obj)
