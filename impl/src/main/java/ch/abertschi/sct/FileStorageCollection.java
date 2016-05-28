@@ -144,9 +144,20 @@ public class FileStorageCollection
 
     private String createKey(InvocationContext invocation)
     {
-        String target = invocation.getMethod().getDeclaringClass().getCanonicalName().toLowerCase();
-        String method = invocation.getMethod().getName().toLowerCase();
-        return String.format("%s.%s.xml", target, method);
+        String key;
+        if (!$.isNull(invocation.getMethod()))
+        {
+            String target = invocation.getMethod().getDeclaringClass().getCanonicalName().toLowerCase();
+            String method = invocation.getMethod().getName().toLowerCase();
+            key = String.format("%s.%s.xml", target, method);
+        }
+        else if (!$.isNull(invocation.getTarget()))
+        {
+            String target = invocation.getTarget().getClass().getCanonicalName().toLowerCase();
+            key = String.format("%s.xml", target);
+        } else {
+            key = "storage.xml";
+        }
+        return key;
     }
-
 }

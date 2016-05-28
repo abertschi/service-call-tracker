@@ -14,8 +14,6 @@ public class DefaultInvocationContext implements InvocationContext {
 
     private Object target;
 
-    private String targetName;
-
     private Method method;
 
     private Object proxy;

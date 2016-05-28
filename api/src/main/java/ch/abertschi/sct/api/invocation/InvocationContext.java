@@ -15,7 +15,7 @@ public interface InvocationContext {
     Object getTarget();
     
     Method getMethod();
-    
+
     Object[] getParameters();
     
     void setParameters(Object[] params);

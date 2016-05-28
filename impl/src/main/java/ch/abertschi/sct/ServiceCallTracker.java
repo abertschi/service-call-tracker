@@ -6,6 +6,7 @@ import ch.abertschi.sct.api.Configuration;
 import ch.abertschi.sct.api.invocation.InvocationContext;
 import ch.abertschi.sct.parse.XStreamProvider;
 import ch.abertschi.sct.util.ResultNotFoundException;
+import com.github.underscore.$;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -63,6 +64,7 @@ public class ServiceCallTracker implements Interceptor
                 String msg = String.format("Stored response does not match with method signature %s" +
                         "The method return type was changed.", getTargetName(ctx));
                 LOG.error(msg);
+
                 if (config.isThrowExceptionOnIncompatibleReturnType())
                 {
                     throw new SctException(msg, null);
@@ -170,9 +172,18 @@ public class ServiceCallTracker implements Interceptor
 
     private String getTargetName(InvocationContext invocation)
     {
-        String target = invocation.getMethod().getDeclaringClass().getName();
-        String method = invocation.getMethod().getName();
-        return String.format("%s.%s(...)", target, method);
+        String result;
+        if (!$.isNull(invocation.getMethod()))
+        {
+            String target = invocation.getMethod().getDeclaringClass().getName();
+            String method = invocation.getMethod().getName();
+            result = String.format("%s.%s(...)", target, method);
+        }
+        else
+        {
+            result = invocation.getTarget().getClass().getName();
+        }
+        return result;
     }
 
     private boolean isSkip()
@@ -202,7 +213,7 @@ public class ServiceCallTracker implements Interceptor
 
     private boolean isValidContext(InvocationContext ctx)
     {
-        return ctx.getMethod() != null;
+        return ctx.getMethod() != null || ctx.getTarget() == null;
     }
 
     private String stringify(Object obj)
