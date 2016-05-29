@@ -34,16 +34,16 @@ The project artefacts are available on maven central.
 In order to gain control over method invocations, service-call-tracker must be hooked into your code
 and an instance of `ch.abertschi.sct.api.invocation.InvocationContext` must be built.
 
-There are various ways how to intercept method calls in Java.
-Intercepting using the AspectJ compiler ("ajc") and the service-call-tracker extension for JBoss Arquillian are further described.
+There are various ways how to intercept method calls in Java such as:
 
-- AspectJ
-- Arquillian Extension for service-call-tracker
+- [Around Advice with AspectJ](https://eclipse.org/aspectj/doc/next/adk15notebook/ataspectj-pcadvice.html)
+- [Arquillian Extension for service-call-tracker](https://github.com/abertschi/arquillian-service-call-tracker-extension)
 - Java Dynamic Proxy API
 - Any bean container framework providing interceptors (ie. EJB, CDI)
 
-
 ### Recording 
+
+In order to record calls, create an instance of `Configuration` and enable recording.
 
 ```java
 Configuration config = new Configuration();
@@ -67,23 +67,17 @@ config.setReplayingSource(new File("my-replayings.xml"));
 ServiceCallTracker serviceCallTracker = new ServiceCallTracker(config);
 
 // gain access to a method call and build an InvocationContext
-InvocationContext currentCall = ...
+InvocationContext currentCall =  ...
 
 // build respone from my-replayings.xml if currentCall previously recorded
 Object result = serviceCallTracker.invoke(currentCall);
 ```
 
-### Interceptor
-
-#### Intercepting with AspectJ
-
-#### Intercepting in integration tests with JBoss Arquillian
-
 ## Data Storage
 
-The default configuration marshalles method calls to a file of key-value pairs of `call`. The method arguments placed in `request` act as the key and their return value placed in `response` acts as the value. 
+The default configuration marshalles method calls to a file of key-value pairs of `<call>`. The method arguments placed in `<request>` act as the key and their return value placed in `<response>` acts as the value. 
 
-`payload` sections within `request` and `response` contain the marshalled method calls.
+`<payload>` sections within `<request>` and `<response>` contain the marshalled method calls.
 
 ```xml
 <storage>
@@ -113,7 +107,7 @@ The default configuration marshalles method calls to a file of key-value pairs o
 
 ### Stacktrace
 
-There is support to throw exceptions from `<stacktrace/>` as a response to a matching request.
+There is support to throw exceptions from `<stacktrace>` as a response to a matching request.
 This is useful to test some worse-case scenarios.
 
 ```xml
@@ -138,12 +132,13 @@ This is useful to test some worse-case scenarios.
   </response>
 </call>
 ```
-The library [stacktrace-unserialize](https://github.com/abertschi/stacktrace-unserialize) is used to convert stacktraces to throwable.
+- The example above throws an OutOfMemoryError with the given stacktrace if an intercepted method with the String argument *Peter Parker* is called.
+
+The library [stacktrace-unserialize](https://github.com/abertschi/stacktrace-unserialize) is used to convert a stacktrace to a throwable.
 
 ### Groovy Scripting
 
-If a static stacktrace is not enough, a Groovy Shell can be fired up and an exception or any other response put into `<script/>`
-can dynamically be formed during execution.
+If a static stacktrace is not enough, a Groovy Shell can be fired up to build a response. Groovy code within `<script>` is evaluated at runtime.
 
 ```xml
 <call>
@@ -164,20 +159,22 @@ can dynamically be formed during execution.
 </call>
 ```
 
+- The example above throws a RuntimeException if an intercepted method with the String argument *Peter Parker* is called.
+
 These global variable are available in your Groovy script.
 
 | Properties | Description          |
 |------------------|---|
-| request.payload  | Access to fields of the current request                    
-| response.payload | Access to fields of the response payload tag
+| request.payload  | Access fields of the current request                    
+| response.payload | Access fields of the response payload tag
 | stacktrace       | The stacktrace as instance of Throwable if set in the stacktrace tag of the response
-| system           | Access to Java system variables (i.e. system.mySystemVarName)
-| env              | Access to environment variables
+| system           | Access Java system variables (i.e. system.mySystemVarName)
+| env              | Access environment variables
 
 
 You can set a script, a stacktrace and a payload as a response for a call.
 In your Groovy script you have access to the throwable instance of the stacktrace tag and the return object of the payload tag.
-Once you set a script, the stacktrace and payload tags are ignored and you need to return or throw any objects within your script.
+Once you set a script, the stacktrace and payload tags are ignored and you need to return or throw an objects within the script.
 
 The table below shows the priority of execution of these tags (high to low)
 
@@ -190,7 +187,16 @@ The table below shows the priority of execution of these tags (high to low)
 
 ### EL Expressions
 
-To put expressions into the `<payload/>` sections of the `<request/>` and `<response/>` objects of a call, a syntax valid to the Java Expression Language can be used.
+You can use the Java Expression Language to write expressions within the `<payload>` sections of the `<request>` and `<response>` objects.
+
+These objects are preconfigured:
+
+| Properties | Description          |
+|------------------|---|
+| request.payload  | Access fields of the current request                    
+| response.payload | Access fields of the response payload tag
+| system           | Access Java system variables (i.e. system.mySystemVarName)
+| env              | Access environment variables
 
 ```xml
 <call>
@@ -214,8 +220,7 @@ To put expressions into the `<payload/>` sections of the `<request/>` and `<resp
 
 In any field of the request payload, you can use regular rexpressions to alter the request matching behaviour.
 
-The example below throws an exception for any request given.
-The calls with the lowest index in the file is checked first to match the current index.
+The example below throws an exception for any request given. Calls with the lowest index in the file are checked first.
 
 ```xml
 <call>
@@ -228,7 +233,7 @@ The calls with the lowest index in the file is checked first to match the curren
 </call>
 ```
 
-Some common regular expressions are predefined and accessible as `#{regex.<name>}`.
+Some common regular expressions are predefined and accessible with as `#{regex.<name>}`.
 
 | Properties | Description          |
 |------------------|---|
