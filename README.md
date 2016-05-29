@@ -81,9 +81,9 @@ Object result = serviceCallTracker.invoke(currentCall);
 
 ## Data Storage
 
-The default configuration marshalles method calls to a file of key-value pairs of `<call/>`. The method arguments placed in `<request/>` as the key and their return value placed in `<response/>` acts as the value. 
+The default configuration marshalles method calls to a file of key-value pairs of `call`. The method arguments placed in `request` act as the key and their return value placed in `response` acts as the value. 
 
-`<payload/>` sections within `<request/>` and `<response/>` contain the marshalled method calls.
+`payload` sections within `request` and `response` contain the marshalled method calls.
 
 ```xml
 <storage>
@@ -108,6 +108,8 @@ The default configuration marshalles method calls to a file of key-value pairs o
   </calls>
 </storage>
 ```
+
+- This example unmarshalls the response payload object above if an intercepted method with the String argument *Peter Parker* is called.
 
 ### Stacktrace
 
