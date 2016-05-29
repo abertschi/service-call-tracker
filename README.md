@@ -43,7 +43,8 @@ There are various ways how to intercept method calls in Java such as:
 
 ### Recording 
 
-In order to record calls, create an instance of `Configuration` and enable recording.
+In order to record calls, create an instance of `ch.abertschi.sct.api.Configuration`, enable recording and
+fire up `ServiceCallTracker#invoke(config: Configuration)`.
 
 ```java
 Configuration config = new Configuration();
