@@ -40,6 +40,12 @@ public class StorageParser
         init();
     }
 
+    public StorageParser(ParserContext context)
+    {
+        this.parserContext = context;
+        init();
+    }
+
     private void init()
     {
         this.requestAndResponseTransformers = getRequestAndResponseTransformers();
@@ -53,7 +59,7 @@ public class StorageParser
     {
         Object response = null;
         ParserCall call = findCall(request);
-        if (!$.isNull(call))
+        if (call != null)
         {
             try
             {
@@ -69,6 +75,11 @@ public class StorageParser
             throw new ResultNotFoundException();
         }
         return response;
+    }
+
+    public boolean containsObject(Object request)
+    {
+        return findCall(request) != null;
     }
 
     protected ParserCall findCall(Object currentRequest)

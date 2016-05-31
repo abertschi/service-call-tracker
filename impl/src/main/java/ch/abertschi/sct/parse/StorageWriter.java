@@ -24,9 +24,16 @@ public class StorageWriter
 
     private ParserContext parserContext;
 
+    private boolean skipDoubles = false;
+
     public StorageWriter(File target)
     {
         this.target = target;
+    }
+    public StorageWriter(File target, boolean skipDoubles)
+    {
+        this.target = target;
+        this.skipDoubles = true;
     }
 
     public void dump(Call call)
@@ -55,8 +62,10 @@ public class StorageWriter
     public void write(List<Call> calls)
     {
         ParserContext context = getParserContext();
+        StorageParser parser = new StorageParser(context);
         calls.stream()
-                .map(call -> ParserCall.createWithRawObjects(call.getRequest().getPayload(), call.getResponse().getPayload()))
+                .filter(call -> ! isDoubleAndSkip(parser, call)) // if skip doubles, then exclude from stream
+                .map(call -> toParserCall(call))
                 .forEach(call -> context.getCalls().add(call));
         persist(toStorage(context));
     }
@@ -132,6 +141,16 @@ public class StorageWriter
                 throw new RuntimeException(e);
             }
         }
+    }
+
+    private boolean isDoubleAndSkip(StorageParser parser, Call call)
+    {
+        return skipDoubles && parser.containsObject(call.getRequest().getPayload());
+    }
+
+    private ParserCall toParserCall(Call call)
+    {
+        return ParserCall.createWithRawObjects(call.getRequest().getPayload(), call.getResponse().getPayload());
     }
 
     private void logAsXml(Object toLog)

@@ -18,7 +18,7 @@ public class Configuration
     private boolean recordingEnabled = false;
     private File recordingSource;
     private INPUT_SOURCE recordingSourceType = INPUT_SOURCE.SINGLE_FILE;
-    private boolean recordingSkipDoubles = true;
+    private boolean recordingSkipDoubles = false;
     private RECORDING_MODE recordingMode = RECORDING_MODE.OVERWRITE;
 
 
