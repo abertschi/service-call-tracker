@@ -8,13 +8,23 @@ import com.thoughtworks.xstream.io.xml.DomDriver;
 import com.thoughtworks.xstream.io.xml.PrettyPrintWriter;
 
 import java.io.Writer;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by abertschi on 12/05/16.
  */
-public class XStreamProvider
+public enum XStreamProvider
 {
-    public static XStream createXStream()
+    GET;
+
+    private Map<String, Class<?>> aliases = new HashMap<>();
+
+    public void addAlias(String alias, Class<?> type) {
+        aliases.put(alias, type);
+    }
+
+    public XStream createPreConfiguredXStream()
     {
         XStream xstream = new XStream(
                 new DomDriver()
@@ -29,14 +39,17 @@ public class XStreamProvider
         return xstream;
     }
 
-    private static void registerAliases(XStream xstream)
+    private void registerAliases(XStream xstream)
     {
         xstream.alias("call", Call.class);
+        for(Map.Entry<String, Class<?>> alias: aliases.entrySet()) {
+            xstream.alias(alias.getKey(), alias.getValue());
+        }
         //xstream.alias("callobject", CallObject.class);
         //xstream.alias("calls", CallCollection.class);
     }
 
-    private static void applyDefaultConfig(XStream xstream)
+    private void applyDefaultConfig(XStream xstream)
     {
         xstream.autodetectAnnotations(true);
         xstream.setClassLoader(Thread.currentThread().getContextClassLoader());

@@ -10,7 +10,7 @@
 
     <groupId>ch.abertschi.sct</groupId>
     <artifactId>service-call-tracker-parent</artifactId>
-    <version>0.1.0-alpha8-SNAPSHOT</version>
+    <version>0.1.0-alpha9</version>
 
     <packaging>pom</packaging>
 
@@ -37,7 +37,6 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <version.org.aspectj>1.7.4</version.org.aspectj>
         <version.org.slf4j.api>1.5.10</version.org.slf4j.api>
     </properties>
 
@@ -124,29 +123,6 @@
                 <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-api</artifactId>
                 <version>${version.org.slf4j.api}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.aspectj</groupId>
-                <artifactId>aspectjrt</artifactId>
-                <version>${version.org.aspectj}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.aspectj</groupId>
-                <artifactId>aspectjtools</artifactId>
-                <version>${version.org.aspectj}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.aspectj</groupId>
-                <artifactId>aspectjtools</artifactId>
-                <version>1.7.4</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.aspectj</groupId>
-                <artifactId>aspectjrt</artifactId>
-                <version>1.7.4</version>
             </dependency>
 
             <dependency>

@@ -7,8 +7,11 @@ import ch.abertschi.sct.api.invocation.InvocationContext;
 import ch.abertschi.sct.parse.XStreamProvider;
 import ch.abertschi.sct.util.ResultNotFoundException;
 import com.github.underscore.$;
+import com.thoughtworks.xstream.XStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Map;
 
 public class ServiceCallTracker implements Interceptor
 {
@@ -17,6 +20,7 @@ public class ServiceCallTracker implements Interceptor
     private static final String CONFIG_SKIP = "sct.skip";
     private static final String CONFIG_SKIP_RECORDING = "sct.record.skip";
     private static final String CONFIG_SKIP_REPLAYING = "sct.replay.skip";
+    private XStream xstream;
 
     private Configuration config;
     private FileStorageCollection storageCollection;
@@ -27,7 +31,15 @@ public class ServiceCallTracker implements Interceptor
         {
             this.storageCollection = new FileStorageCollection(config);
         }
+        if (config.getMarshallInstructions() != null)
+        {
+            for (Map.Entry<String, Class<?>> alias : config.getMarshallInstructions().entrySet())
+            {
+                XStreamProvider.GET.addAlias(alias.getKey(), alias.getValue());
+            }
+        }
         this.config = config;
+        this.xstream = XStreamProvider.GET.createPreConfiguredXStream();
     }
 
     @Override
@@ -219,6 +231,6 @@ public class ServiceCallTracker implements Interceptor
 
     private String stringify(Object obj)
     {
-        return XStreamProvider.createXStream().toXML(obj);
+        return xstream.toXML(obj);
     }
 }

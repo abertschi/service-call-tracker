@@ -18,7 +18,7 @@ public class TestUtils
 {
     private static final String TEST_RES = "src/test/resources/";
 
-    private static final XStream XSTREAM = XStreamProvider.createXStream();
+    private static final XStream XSTREAM = XStreamProvider.GET.createPreConfiguredXStream();
 
     private TestUtils()
     {

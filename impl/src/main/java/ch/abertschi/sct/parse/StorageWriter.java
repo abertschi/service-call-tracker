@@ -20,7 +20,7 @@ public class StorageWriter
 
     private File target;
 
-    private static final XStream XSTREAM = XStreamProvider.createXStream();
+    private static final XStream XSTREAM = XStreamProvider.GET.createPreConfiguredXStream();
 
     private ParserContext parserContext;
 

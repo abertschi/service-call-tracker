@@ -3,6 +3,8 @@ package ch.abertschi.sct.api;
 import java.io.File;
 import java.net.URI;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by abertschi on 17/05/16.
@@ -21,6 +23,24 @@ public class Configuration
     private boolean recordingSkipDoubles = false;
     private RECORDING_MODE recordingMode = RECORDING_MODE.OVERWRITE;
 
+    private Map<String, Class<?>> marshallInstructions = new HashMap<>();
+
+    public Map<String, Class<?>> getMarshallInstructions()
+    {
+        return marshallInstructions;
+    }
+
+    public Configuration setMarshallInstructions(Map<String, Class<?>> instructions)
+    {
+        this.marshallInstructions = instructions;
+        return this;
+    }
+
+    public Configuration addMarshallInstruction(String alias, Class<?> type)
+    {
+        marshallInstructions.put(alias, type);
+        return this;
+    }
 
     public enum RECORDING_MODE
     {
