@@ -42,6 +42,12 @@ public class NodeUtils
         return node.doesMatchWith(otherNode, true);
     }
 
+    public static boolean doesNodeMatchWithObject(Node node, Object object, boolean ignoreMissingFieldsInNode)
+    {
+        Node otherNode = createNodeFromObject(object);
+        return node.doesMatchWith(otherNode, true);
+    }
+
     public static Node parseDomToNode(Element element)
     {
         return parseDomToNode(element, null);

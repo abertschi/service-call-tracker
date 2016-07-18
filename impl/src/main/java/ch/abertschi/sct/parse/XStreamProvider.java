@@ -36,6 +36,7 @@ public enum XStreamProvider
                 });
         applyDefaultConfig(xstream);
         registerAliases(xstream);
+        xstream.ignoreUnknownElements();
         return xstream;
     }
 

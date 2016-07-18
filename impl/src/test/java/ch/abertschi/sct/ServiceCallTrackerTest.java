@@ -52,7 +52,7 @@ public class ServiceCallTrackerTest
         TestUtils.assertCompareAsXml(venom, venomParsed);
     }
 
-    @Test
+    //@Test
     public void test(){
         CustomerService service = getDefaultCustomerService();
         Configuration config = new Configuration();

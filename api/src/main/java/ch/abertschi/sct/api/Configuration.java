@@ -12,7 +12,7 @@ import java.util.Map;
 public class Configuration
 {
     // general
-    private boolean throwExceptionOnNotFound = false;
+    private boolean throwExceptionOnNotFound = true;
     private boolean throwExceptionOnIncompatibleReturnType = true;
     //private boolean ignoreUnknownFields = false;
 
