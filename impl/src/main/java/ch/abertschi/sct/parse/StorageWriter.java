@@ -30,11 +30,6 @@ public class StorageWriter
     {
         this.target = target;
     }
-    public StorageWriter(File target, boolean skipDoubles)
-    {
-        this.target = target;
-        this.skipDoubles = true;
-    }
 
     public void dump(Call call)
     {

@@ -105,7 +105,7 @@ public class FileStorageCollection
             writer = writerMap.get(DEFAULT);
             if (writer == null)
             {
-                writer = new StorageWriter(config.getRecordingSource(), config.isRecordingSkipDoubles());
+                writer = new StorageWriter(config.getRecordingSource());
                 writerMap.put(DEFAULT, writer);
             }
         }
@@ -117,7 +117,7 @@ public class FileStorageCollection
             {
                 createDirectory(config.getRecordingSource());
                 File recording = new File(config.getRecordingSource(), key);
-                writer = new StorageWriter(recording, config.isRecordingSkipDoubles());
+                writer = new StorageWriter(recording);
                 writerMap.put(key, writer);
             }
         }
