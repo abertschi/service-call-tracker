@@ -217,7 +217,7 @@ These objects are preconfigured:
 </call>
 ```
 
-### Regular expressions
+### Regular expressions (experimental)
 
 In any field of the request payload, you can use regular rexpressions to alter the request matching behaviour.
 
