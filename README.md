@@ -12,7 +12,8 @@
 
 
 
-service-call-tracker is a method call marshaller for Java. It can record method invocations and is able to stub their implementation by replaying previously recorded method calls. Created with the aim to provide more reliable test data in development and testing tiers  of an enterprise application, service-call-tracker can be used to provide a set of always-available test data.
+service-call-tracker is a method call marshaller for Java. It can record method invocations and is able to stub their implementation by replaying previously recorded method calls. Created with the aim to provide more reliable test data in development and testing tiers of an enterprise application, service-call-tracker can be used to provide a set of always-available test data.
+In combination with the [JBoss Arquillian Extension for service-call-tracker](https://github.com/abertschi/arquillian-service-call-tracker-extension), service-call-tracker is capable of serializing calls to 3rd-party code making your integration tests independent of availability and data consistency of 3rd-party code within your application.
 
 ## Install
 
