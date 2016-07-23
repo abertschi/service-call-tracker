@@ -1,6 +1,8 @@
 package ch.abertschi.sct.node;
 
 import com.github.underscore.$;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -14,6 +16,8 @@ import java.util.regex.PatternSyntaxException;
  */
 public class Node
 {
+    private static final Logger LOG = LoggerFactory.getLogger(Node.class);
+
     private String name;
     private String value;
     private String classType;
@@ -37,9 +41,9 @@ public class Node
         // other: request object
         //
         // if this object contains different values than other, objects do not match
-        // TODO: if other object contains fields not set in this, objects do match - Feature ?
+
         boolean success = true;
-        System.out.println(String.format("comparing %s (%s) with other %s (%s)", this.getName(), this.getValue(), other.getName(), other.getValue()));
+        LOG.debug(String.format("comparing %s (%s) with other %s (%s)", this.getName(), this.getValue(), other.getName(), other.getValue()));
         if (this.name.equals(other.name) || ignoreRootNames) // outer names are not compatible
         {
             if (this.isContainer && other.isContainer)
@@ -49,19 +53,18 @@ public class Node
                     boolean matchChild = false;
                     for (Node otherChild : other.getChildren())
                     {
-                        System.out.println(String.format("iterating through children %s (%s) with other %s (%s)", child.getName(), child.getValue(), otherChild.getName(), otherChild.getValue()));
+                        LOG.debug(String.format("iterating through children %s (%s) with other %s (%s)", child.getName(), child.getValue(), otherChild.getName(), otherChild.getValue()));
                         if (child.doesMatchWith(otherChild))
                         {
-                            System.out.println("match TRUE " + child.getName() + " " + child.getValue() + " " + otherChild.getName() + " " + otherChild.getValue());
+                            LOG.debug("match TRUE " + child.getName() + " " + child.getValue() + " " + otherChild.getName() + " " + otherChild.getValue());
                             matchChild = true;
                             break;
                         }
                     }
                     if (!matchChild)
                     {
-                        System.out.println("nothing machted " + child.getName() + child.getValue());
-                        success = false;
-                        return false;
+                        LOG.debug("nothing machted " + child.getName() + child.getValue());
+                        return false; // success = false
                     }
                 }
             }
@@ -77,14 +80,14 @@ public class Node
                         && other.getValue().matches(this.value);
 
                 // compare values
-                //System.out.println(String.format("comparing %s (%s) with other %s (%s): %s", this.getName(), this.getValue(), other.getName(), other.getValue(), success ? "true" : "false"));
+                //LOG.debug(String.format("comparing %s (%s) with other %s (%s): %s", this.getName(), this.getValue(), other.getName(), other.getValue(), success ? "true" : "false"));
             }
         }
         else {
             success = false;
         }
 
-        System.out.println(String.format("comparing %s (%s) with other %s (%s): %s", this.getName(), this.getValue(), other.getName(), other.getValue(), success ? "true" : "false"));
+        LOG.debug(String.format("comparing %s (%s) with other %s (%s): %s", this.getName(), this.getValue(), other.getName(), other.getValue(), success ? "true" : "false"));
         return success;
     }
 

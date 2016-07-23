@@ -3,9 +3,12 @@ package ch.abertschi.sct.parse;
 import ch.abertschi.sct.node.Node;
 import ch.abertschi.sct.node.NodeUtils;
 import com.github.underscore.$;
+import com.thoughtworks.xstream.XStream;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.output.XMLOutputter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -19,6 +22,9 @@ import java.util.List;
  */
 public class XmlParser
 {
+
+    private static final Logger LOG = LoggerFactory.getLogger(XmlParser.class);
+
     public ParserContext parse(File file)
     {
         try
@@ -57,6 +63,10 @@ public class XmlParser
             }
 
             context.setCalls(storageCalls);
+        }
+        if (LOG.isTraceEnabled())
+        {
+            LOG.trace("Parsing storage {}", XStreamProvider.GET.createPreConfiguredXStream().toXML(context));
         }
         return context;
     }

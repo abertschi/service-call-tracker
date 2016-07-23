@@ -48,7 +48,6 @@ public class FieldReferenceTransformer implements Transformer
             for (String var : getProperties("request.payload", input))
             {
                 String key = var.substring("request.".length());
-                System.out.println(key);
                 Node node = NodeUtils.findNodeInTree(key, context.getCall().getRequest().getPayloadNode());
                 if (!$.isNull(node))
                 {
@@ -66,7 +65,6 @@ public class FieldReferenceTransformer implements Transformer
             for (String var : getProperties("response.payload", input))
             {
                 String key = var.substring("response.".length());
-                System.out.println(key);
                 Node node = NodeUtils.findNodeInTree(key, context.getCall().getResponse().getPayloadNode());
                 if (!$.isNull(node))
                 {
