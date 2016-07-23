@@ -37,6 +37,7 @@ and an instance of `ch.abertschi.sct.api.invocation.InvocationContext` must be b
 There are various ways how to intercept method calls in Java such as:
 
 - [Around Advice with AspectJ](https://eclipse.org/aspectj/doc/next/adk15notebook/ataspectj-pcadvice.html)
+  - See [AspectJ Extension for AspectJ](https://github.com/abertschi/arquillian-extension-aspectj)
 - [Arquillian Extension for service-call-tracker](https://github.com/abertschi/arquillian-service-call-tracker-extension)
 - Java Dynamic Proxy API
 - Any bean container framework providing interceptors (ie. EJB, CDI)
