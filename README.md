@@ -10,7 +10,7 @@
 
 # service-call-tracker
 
-
+> A method call marshaller for Java
 
 service-call-tracker is a method call marshaller for Java. It can record method invocations and is able to stub their implementation by replaying previously recorded method calls. Created with the aim to provide more reliable test data in development and testing tiers of an enterprise application, service-call-tracker can be used to stub code to provide a set of predicted and always-available test data.
 
@@ -243,4 +243,10 @@ Some common regular expressions are predefined and accessible with as `#{regex.<
 | regex.numeric | Match only if field is numeric
 
 
+## Who uses this
+This project was originally created as a side project at AXA Winterthur to increase test automation.
+It is used in-house with the _Arquillian Extension for service-call-tracker_ to integration test backend code.
+However, its copyright is not assigned to AXA Winterthur.
 
+## Licence
+Apache 2.0
