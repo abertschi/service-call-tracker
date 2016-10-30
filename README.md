@@ -12,7 +12,7 @@
 
 > A method call marshaller for Java
 
-service-call-tracker is a method call marshaller for Java. It can record method invocations and is able to stub their implementation by replaying previously recorded method calls. Created with the aim to provide more reliable test data in development and testing tiers of an enterprise application, service-call-tracker can be used to stub code to provide a set of predicted and always-available test data.
+service-call-tracker is a method call marshaller for Java. It can record method invocations and is able to stub their implementation by replaying previously recorded method calls. Created with the aim to provide more reliable test data in development and testing tiers of an enterprise application, service-call-tracker can be used to stub code to provide a set of predictable and always-available test data.
 
 ## Install
 
